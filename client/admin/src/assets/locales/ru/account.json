@@ -1,0 +1,10 @@
+{
+    "username": "Имя пользователя",
+    "firstName": "Имя",
+    "lastName": "Отчество",
+    "surname": "Фамилия",
+    "password": "Пароль",
+    "role": "Роль",
+    "confirmPassword": "Повторите пароль",
+    "createUserButton": "Создать пользователя"
+}

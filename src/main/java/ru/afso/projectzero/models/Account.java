@@ -17,9 +17,9 @@ public class Account {
 
     private String firstName;
 
-    private String secondName;
-
     private String lastName;
+
+    private String surname;
 
     private Date createdAt;
 
@@ -37,12 +37,12 @@ public class Account {
         this.firstName = firstName;
     }
 
-    public String getSecondName() {
-        return secondName;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getLastName() {

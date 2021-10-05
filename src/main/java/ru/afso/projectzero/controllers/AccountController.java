@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.models.Account;
 import ru.afso.projectzero.repositories.AccountRepository;
-import java.util.List;
+
+import java.util.HashMap;
 
 @RestController
 public class AccountController {
@@ -12,20 +13,29 @@ public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/api/v1.0/account")
-    public List<Account> getAccounts() {
-        return accountRepository.findAll();
+    public HashMap<String, Object> getAccounts() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("payload", accountRepository.findAll());
+        return map;
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/api/v1.0/account/{id}")
     public String getAccount(@PathVariable String id) {
         return id;
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(value = "/api/v1.0/account", consumes = { "application/json" })
-    public Account createAccount(@RequestBody Account account) {
+    public HashMap<String, Object> createAccount(@RequestBody Account account) {
         accountRepository.save(account);
-        return account;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("payload", account);
+        return map;
     }
 
     @PutMapping(value="/api/v1.0/account/{id}", consumes = { "application/json" })
