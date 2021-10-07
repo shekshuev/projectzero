@@ -13,7 +13,6 @@ public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/api/v1.0/account")
     public HashMap<String, Object> getAccounts() {
         HashMap<String, Object> map = new HashMap<>();
@@ -22,14 +21,12 @@ public class AccountController {
         return map;
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/api/v1.0/account/{id}")
     public String getAccount(@PathVariable String id) {
         return id;
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping(value = "/api/v1.0/account", consumes = { "application/json" })
+    @PostMapping("/api/v1.0/account")
     public HashMap<String, Object> createAccount(@RequestBody Account account) {
         accountRepository.save(account);
         HashMap<String, Object> map = new HashMap<>();

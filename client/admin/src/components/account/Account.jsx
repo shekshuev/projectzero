@@ -1,8 +1,12 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Container, TextField, Grid, Button, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import LoadingButton from '@mui/lab/LoadingButton';
 import { createAccount } from "../../api/account";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm, Controller } from "react-hook-form";
 
 const CustomTextField = (props) => {
     return (
@@ -10,10 +14,14 @@ const CustomTextField = (props) => {
     )
 }
 
+const schema = yup.object({
+    username: yup.string().required()
+}).required();
+
 const Account = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
 
+    const dispatch = useDispatch();
     const createUser = () => {
         dispatch(createAccount(account));
     }
@@ -23,9 +31,24 @@ const Account = () => {
         "admin"
     ]);
 
+
+    const loading = useSelector(state => state.account.loading);
+
+
+    const { register, handleSubmit, watch, setValue, formState: { errors }} = useForm({
+        resolver: yupResolver(schema)
+    });
+    const onSubmit = data => {
+        console.log(data);
+    }
+
+    useEffect(() => {
+        register("username");
+    }, [register])
+
     const [ account, setAccount ] = useState({
-        id: "",
-        username: "",
+        id: null,
+        username: watch("username"),
         password: "",
         confirmPassword: "",
         firstName: "",
@@ -37,14 +60,18 @@ const Account = () => {
     return (
         <Container sx={{mt:2}}>
             <Grid spacing={2}
+                  component="form"
+                  onSubmit={handleSubmit(onSubmit)}
                   container
                   direction="column"
                   alignItems="center">
                 <Grid item>
                     <CustomTextField fullWidth
+                                     error={ !!errors?.username }
                                      value={account.username}
-                                     onChange={e=>setAccount({...account, username: e.target.value})}
+                                     onChange={e=>setValue("username", e.target.value)}
                                      label={t("account:username")}
+                                     helperText={ errors.username?.message }
                                      variant="standard" />
                 </Grid>
                 <Grid item>
@@ -102,8 +129,9 @@ const Account = () => {
 
                 </Grid>
                 <Grid item>
-                    <Button variant="contained"
-                            onClick={createUser}>{t("account:createUserButton")}</Button>
+                    <LoadingButton variant="contained"
+                                   loading={loading}
+                                   type="submit">{t("account:createUserButton")}</LoadingButton>
                 </Grid>
             </Grid>
         </Container>

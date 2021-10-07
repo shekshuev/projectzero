@@ -24,7 +24,7 @@ export const loadAccounts = () => {
             dispatch(setAccountsErrorAction(e.message));
             dispatch(setAccountsAction([]));
         } finally {
-            dispatch(setAccountsLoadingAction(true));
+            dispatch(setAccountsLoadingAction(false));
         }
     }
 };
@@ -34,10 +34,9 @@ export const createAccount = (account) => {
         dispatch(setAccountsErrorAction(""));
         dispatch(setAccountsLoadingAction(true));
         try {
-            let form = new FormData();
-            form.append("account", JSON.stringify(account));
-            const result = await axios.post(url, form, {
+            const result = await axios.post(url, JSON.stringify(account), {
                 headers: {
+                    'Accept': 'application/json',
                     "Content-Type": "application/json"
                 }
             });
