@@ -22,8 +22,11 @@ public class AccountController {
     }
 
     @GetMapping("/api/v1.0/account/{id}")
-    public String getAccount(@PathVariable String id) {
-        return id;
+    public HashMap<String, Object> getAccount(@PathVariable String id) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("payload", accountRepository.findById(id));
+        return map;
     }
 
     @PostMapping("/api/v1.0/account")

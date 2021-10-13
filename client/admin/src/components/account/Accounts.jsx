@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Container } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useSelector } from "react-redux";
+import {Link} from "react-router-dom";
 
 const Accounts = () => {
 
@@ -11,12 +12,11 @@ const Accounts = () => {
         { field: "firstName", headerName: "First name" },
         { field: "lastName", headerName: "Last Name" }
     ]);
+    const [selectedAccountId, setSelectedAccountId] = useState();
 
-    const [selectedAccount, setSelectedAccount] = useState();
 
-
-    const selectionModelChanged = (model) => {
-        setSelectedAccount(model);
+    const selectionModelChanged = (ids) => {
+        setSelectedAccountId(ids[0]);
     }
 
     const accounts = useSelector(state => state.account.accounts);
@@ -26,12 +26,18 @@ const Accounts = () => {
             <DataGrid  columns={columns}
                       rows={accounts}
                       autoHeight
-                      selectionModel={selectedAccount}
+                      selectionModel={selectedAccountId}
                       onSelectionModelChange={selectionModelChanged}
             />
             <Button sx={{my: 2}}
+                    component={Link}
+                    to={ `/account/${selectedAccountId}` }
                     variant="contained"
-                    disabled={!selectedAccount}>Создать пользователя</Button>
+                    disabled={!selectedAccountId}>
+                Создать пользователя
+            </Button>
+
+
         </Container>
     );
 };

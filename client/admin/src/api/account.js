@@ -29,6 +29,18 @@ export const loadAccounts = () => {
     }
 };
 
+export const loadAccount = async (id) => {
+    try {
+        let result = await axios.get(`${url}/${id}`);
+        return result.data;
+    } catch (e) {
+        return {
+            data: e.message,
+            success: false
+        }
+    }
+};
+
 export const createAccount = (account) => {
     return async dispatch => {
         dispatch(setAccountsErrorAction(""));

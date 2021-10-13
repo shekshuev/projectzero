@@ -41,6 +41,9 @@ const App = () => {
                     <Route path="/account/new">
                         <Account />
                     </Route>
+                    <Route path="/account/:id">
+                        <Account />
+                    </Route>
                 </Switch>
             </Router>
         </React.StrictMode>
