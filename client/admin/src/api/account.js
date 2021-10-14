@@ -1,21 +1,25 @@
 import axios from "axios";
 import { API_URL } from "./base";
-
-const url = `${API_URL()}account`;
-
 import { setAccountsAction,
     setAccountsLoadingAction,
     setAccountsErrorAction,
-    addAccountAction } from "../store/reducers/accountReducer";
+    addAccountAction,
+    updateAccountAction,
+    setAccountsTotalCountAction } from "../store/reducers/accountReducer";
 
-export const loadAccounts = () => {
+const url = `${API_URL()}account`;
+
+export const loadAccounts = (count, offset) => {
     return async dispatch => {
         dispatch(setAccountsErrorAction(""));
         dispatch(setAccountsLoadingAction(true));
         try {
-            let result = await axios.get(url);
+            let result = await axios.get(url, {
+                params: { count, offset }
+            });
             if (result.data.success) {
-                dispatch(setAccountsAction(result.data.payload));
+                dispatch(setAccountsTotalCountAction(result.data.payload.total));
+                dispatch(setAccountsAction(result.data.payload.accounts));
             } else {
                 dispatch(setAccountsErrorAction(result.data.payload.message));
                 dispatch(setAccountsAction([]));
@@ -26,7 +30,7 @@ export const loadAccounts = () => {
         } finally {
             dispatch(setAccountsLoadingAction(false));
         }
-    }
+    };
 };
 
 export const loadAccount = async (id) => {
@@ -53,14 +57,57 @@ export const createAccount = (account) => {
                 }
             });
             if (result.data.success) {
-                dispatch(addAccountAction(result.data.payload.account));
+                dispatch(addAccountAction(result.data.payload));
             } else {
-                dispatch(setAccountsErrorAction(result.data.payload.message));
+                dispatch(setAccountsErrorAction(result.data.payload));
             }
         } catch (e) {
             dispatch(setAccountsErrorAction(e.message));
         } finally {
             dispatch(setAccountsLoadingAction(false));
         }
-    }
+    };
+}
+
+export const updateAccount = (account) => {
+    return async dispatch => {
+        dispatch(setAccountsErrorAction(""));
+        dispatch(setAccountsLoadingAction(true));
+        try {
+            const result = await axios.put(`${url}/${account.id}`, JSON.stringify(account), {
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                }
+            });
+            if (result.data.success) {
+                dispatch(updateAccountAction(result.data.payload));
+            } else {
+                dispatch(setAccountsErrorAction(result.data.payload));
+            }
+        } catch (e) {
+            dispatch(setAccountsErrorAction(e.message));
+        } finally {
+            dispatch(setAccountsLoadingAction(false));
+        }
+    };
+}
+
+export const removeAccount = (account, page, offset) => {
+    return async dispatch => {
+        dispatch(setAccountsErrorAction(""));
+        dispatch(setAccountsLoadingAction(true));
+        try {
+            const result = await axios.delete(`${url}/${account.id}`);
+            if (result.data.success && result.data.payload) {
+                dispatch(loadAccounts(page, offset));
+            } else {
+                dispatch(setAccountsErrorAction(result.data.payload));
+            }
+        } catch (e) {
+            dispatch(setAccountsErrorAction(e.message));
+        } finally {
+            dispatch(setAccountsLoadingAction(false));
+        }
+    };
 }

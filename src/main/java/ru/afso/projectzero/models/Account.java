@@ -6,10 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Document(collection = "accounts")
-public class Account {
-
-    @Id
-    private String id;
+public class Account extends BaseModel{
 
     private String username;
 
@@ -67,14 +64,6 @@ public class Account {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
 }

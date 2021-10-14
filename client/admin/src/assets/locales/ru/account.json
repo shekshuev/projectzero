@@ -6,5 +6,9 @@
     "password": "Пароль",
     "role": "Роль",
     "confirmPassword": "Повторите пароль",
-    "createUserButton": "Создать пользователя"
+    "createUserButton": "Создать пользователя",
+    "editUserButton": "Редактировать пользователя",
+    "updateUserButton": "Сохранить изменения",
+    "removeUserButton": "Удалить пользователя",
+    "removeUserDialogMessage": "Вы действительно хотите удалить выбранного пользователя?"
 }

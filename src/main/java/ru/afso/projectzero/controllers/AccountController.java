@@ -4,51 +4,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.models.Account;
 import ru.afso.projectzero.repositories.AccountRepository;
-
+import ru.afso.projectzero.utils.ApiResponse;
+import ru.afso.projectzero.utils.SuccessResponse;
 import java.util.HashMap;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/api/v1.0/account")
 public class AccountController {
 
+    private final AccountRepository accountRepository;
+
     @Autowired
-    private AccountRepository accountRepository;
-
-    @GetMapping("/api/v1.0/account")
-    public HashMap<String, Object> getAccounts() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("success", true);
-        map.put("payload", accountRepository.findAll());
-        return map;
+    public AccountController(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
-    @GetMapping("/api/v1.0/account/{id}")
-    public HashMap<String, Object> getAccount(@PathVariable String id) {
+    @GetMapping
+    public ApiResponse<HashMap<String, Object>> getAccounts(
+            @RequestParam(name="count") Optional<Integer> optionalCount,
+            @RequestParam(name="offset") Optional<Integer> optionalOffset) {
+        int count = optionalCount.orElse(5);
+        int offset = optionalOffset.orElse(0);
         HashMap<String, Object> map = new HashMap<>();
-        map.put("success", true);
-        map.put("payload", accountRepository.findById(id));
-        return map;
+        map.put("total", accountRepository.count());
+        map.put("accounts", accountRepository.findAll()
+                .stream().skip(offset).limit(count).collect(Collectors.toList()));
+        return new SuccessResponse<>(map);
     }
 
-    @PostMapping("/api/v1.0/account")
-    public HashMap<String, Object> createAccount(@RequestBody Account account) {
+    @GetMapping("/{id}")
+    public ApiResponse<Account> getAccount(@PathVariable String id) {
+        return new SuccessResponse<>(accountRepository.findById(id).orElse(null));
+    }
+
+    @PostMapping(consumes = { "application/json" })
+    public ApiResponse<Account> createAccount(@RequestBody Account account) {
         accountRepository.save(account);
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("success", true);
-        map.put("payload", account);
-        return map;
+        return new SuccessResponse<>(account);
     }
 
-    @PutMapping(value="/api/v1.0/account/{id}", consumes = { "application/json" })
-    public Account updateAccount(@RequestBody final Account account, @PathVariable String id) {
+    @PutMapping(value="/{id}", consumes = { "application/json" })
+    public ApiResponse<Account> updateAccount(@RequestBody final Account account, @PathVariable String id) {
         account.setId(id);
         accountRepository.save(account);
-        return account;
+        return new SuccessResponse<>(account);
     }
 
-    @DeleteMapping("/api/v1.0/account/{id}")
-    public String deleteAccount(@PathVariable String id) {
+    @DeleteMapping("/{id}")
+    public ApiResponse<Boolean> deleteAccount(@PathVariable String id) {
         accountRepository.deleteById(id);
-        return "ok";
+        return new SuccessResponse<>(true);
     }
 
 }
