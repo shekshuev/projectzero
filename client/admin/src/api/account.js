@@ -93,14 +93,14 @@ export const updateAccount = (account) => {
     };
 }
 
-export const removeAccount = (account, page, offset) => {
+export const removeAccount = (account, count, offset) => {
     return async dispatch => {
         dispatch(setAccountsErrorAction(""));
         dispatch(setAccountsLoadingAction(true));
         try {
             const result = await axios.delete(`${url}/${account.id}`);
-            if (result.data.success && result.data.payload) {
-                dispatch(loadAccounts(page, offset));
+            if (result.data.success) {
+                dispatch(loadAccounts(count, offset));
             } else {
                 dispatch(setAccountsErrorAction(result.data.payload));
             }

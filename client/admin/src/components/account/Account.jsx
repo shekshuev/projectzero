@@ -19,10 +19,7 @@ const Account = () => {
     const { t } = useTranslation();
     const { id } = useParams();
     const dispatch = useDispatch();
-    const [ roles ] = useState([
-        "user",
-        "admin"
-    ]);
+    const [ roles ] = useState(["user", "admin"]);
     const [ dialogOpen, setDialogOpen ] = useState(false);
     const loading = useSelector(state => state.account.loading);
     const count = useSelector(state => state.account.count);
@@ -30,7 +27,6 @@ const Account = () => {
     const [account, setAccount] = useAccount(id);
 
     const history = useHistory();
-
 
     const createOrUpdateUserAsync = (id, account, dispatch) => new Promise((resolve, reject) => {
         if (id) {
@@ -46,11 +42,11 @@ const Account = () => {
     }
 
     const removeUser = () => {
-        removeUserAsync(account, dispatch).then(() => history.replace("/accounts"));
+        removeUserAsync(account, page, count, dispatch).then(() => history.replace("/accounts"));
     }
 
-    const removeUserAsync = (account, dispatch) => new Promise((resolve, reject) => {
-        dispatch(removeAccount(account, page, page * count));
+    const removeUserAsync = (account, page, count, dispatch) => new Promise((resolve, reject) => {
+        dispatch(removeAccount(account, count, page * count));
         resolve();
     })
 
