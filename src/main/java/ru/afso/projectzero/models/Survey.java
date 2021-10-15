@@ -1,14 +1,12 @@
 package ru.afso.projectzero.models;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "surveys")
-public class Survey {
-
-    @Id
-    private String id;
+public class Survey extends BaseModel {
 
     private Date createdAt;
 
@@ -16,8 +14,12 @@ public class Survey {
 
     private Date endDate;
 
-    private String title;
+    private List<Question> questions;
 
-    private String description;
+    @DBRef
+    private Research research;
+
+    // Change to geojson or something else
+    private Object position;
 
 }

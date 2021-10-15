@@ -24,7 +24,8 @@ public class AccountController {
     @GetMapping
     public ApiResponse<HashMap<String, Object>> getAccounts(
             @RequestParam(name="count") Optional<Integer> optionalCount,
-            @RequestParam(name="offset") Optional<Integer> optionalOffset) {
+            @RequestParam(name="offset") Optional<Integer> optionalOffset
+    ) {
         int count = optionalCount.orElse(5);
         int offset = optionalOffset.orElse(0);
         HashMap<String, Object> map = new HashMap<>();
@@ -45,8 +46,8 @@ public class AccountController {
         return new SuccessResponse<>(account);
     }
 
-    @PutMapping(value="/{id}", consumes = { "application/json" })
-    public ApiResponse<Account> updateAccount(@RequestBody final Account account, @PathVariable String id) {
+    @PutMapping(value = "/{id}", consumes = { "application/json" })
+    public ApiResponse<Account> updateAccount(@RequestBody Account account, @PathVariable String id) {
         account.setId(id);
         accountRepository.save(account);
         return new SuccessResponse<>(account);

@@ -8,11 +8,13 @@ import App from "./App";
 
 import "normalize.css";
 
+import appTranslationRU from "./assets/locales/ru/app.json";
 import commonTranslationRU from "./assets/locales/ru/common.json";
 import accountTranslationRU from "./assets/locales/ru/account.json";
 
 const resources = {
     ru: {
+        app: appTranslationRU,
         common: commonTranslationRU,
         account: accountTranslationRU
     }
