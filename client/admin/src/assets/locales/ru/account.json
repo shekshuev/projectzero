@@ -1,4 +1,13 @@
 {
+    "table": {
+        "caption": "Список пользователей",
+        "headers": {
+            "id": "ID",
+            "username": "Имя пользователя",
+            "firstname": "Имя",
+            "lastname": "Фамилия"
+        }
+    },
     "username": "Имя пользователя",
     "firstName": "Имя",
     "lastName": "Отчество",

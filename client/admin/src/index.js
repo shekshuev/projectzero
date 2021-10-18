@@ -11,12 +11,14 @@ import "normalize.css";
 import appTranslationRU from "./assets/locales/ru/app.json";
 import commonTranslationRU from "./assets/locales/ru/common.json";
 import accountTranslationRU from "./assets/locales/ru/account.json";
+import researchTranslationRU from "./assets/locales/ru/research.json";
 
 const resources = {
     ru: {
         app: appTranslationRU,
         common: commonTranslationRU,
-        account: accountTranslationRU
+        account: accountTranslationRU,
+        research: researchTranslationRU
     }
 };
 

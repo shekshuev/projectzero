@@ -32,13 +32,13 @@ const Accounts = () => {
         <Container>
             <TableContainer component={Paper} sx={{mt: 5}}>
                 <Table>
-                    <caption>A basic table example with a caption</caption>
+                    <caption>{ t("account:table:caption") }</caption>
                     <TableHead>
                         <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Username</TableCell>
-                            <TableCell>First Name</TableCell>
-                            <TableCell>Last Name</TableCell>
+                            <TableCell>{ t("account:table:headers:id") }</TableCell>
+                            <TableCell>{ t("account:table:headers:username") }</TableCell>
+                            <TableCell>{ t("account:table:headers:firstname") }</TableCell>
+                            <TableCell>{ t("account:table:headers:lastname") }</TableCell>
                         </TableRow>
                     </TableHead>
                     {
