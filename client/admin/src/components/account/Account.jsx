@@ -2,18 +2,13 @@ import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Container, TextField, Grid, Button, Select, MenuItem, FormControl, InputLabel,
     Dialog, DialogContent, DialogTitle, DialogActions } from "@mui/material";
+import CustomTextField from "../ui/CustomTextField";
 import LoadingButton from '@mui/lab/LoadingButton';
 import { createAccount, updateAccount, removeAccount } from "../../api/account";
 import { useDispatch, useSelector } from "react-redux";
 import {useHistory, useParams} from "react-router-dom";
 import { Link } from "react-router-dom";
 import useAccount from "../../hooks/useAccount";
-
-const CustomTextField = (props) => {
-    return (
-        <TextField sx={{ width: "300px" }}  {...props}/>
-    )
-}
 
 const Account = () => {
     const { t } = useTranslation();
@@ -35,20 +30,20 @@ const Account = () => {
             dispatch(createAccount(account));
         }
         resolve();
-    })
+    });
 
     const createOrUpdateUser = () => {
         createOrUpdateUserAsync(id, account, dispatch).then(() => history.replace("/accounts"));
-    }
-
-    const removeUser = () => {
-        removeUserAsync(account, page, count, dispatch).then(() => history.replace("/accounts"));
-    }
+    };
 
     const removeUserAsync = (account, page, count, dispatch) => new Promise((resolve, reject) => {
         dispatch(removeAccount(account, count, page * count));
         resolve();
-    })
+    });
+
+    const removeUser = () => {
+        removeUserAsync(account, page, count, dispatch).then(() => history.replace("/accounts"));
+    };
 
     return (
         <Container sx={{mt:2}}>

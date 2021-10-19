@@ -9,5 +9,12 @@
         }
     },
     "createResearchButton": "Создать новое исследование",
-    "editResearchButton": "Редактировать исследование"
+    "editResearchButton": "Редактировать исследование",
+    "updateResearchButton": "Сохранить изменения",
+    "removeResearchButton": "Удалить исследование",
+    "title": "Название",
+    "description": "Описание",
+    "beginDate": "Дата начала",
+    "endDate": "Дата окончания",
+    "removeResearchDialogMessage": "Вы действительно хотите удалить выбранное исследование?"
 }

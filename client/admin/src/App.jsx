@@ -9,7 +9,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Accounts from "./components/account/Accounts";
 import Account from "./components/account/Account";
 import Researches from "./components/research/Researches";
+import Research from "./components/research/Research";
 import { loadAccounts } from "./api/account";
+import { loadResearches } from "./api/research";
 import { useTranslation } from "react-i18next";
 
 const App = () => {
@@ -18,13 +20,16 @@ const App = () => {
 
     const dispatch = useDispatch();
 
-    const count = useSelector(state => state.account.count);
-    const page = useSelector(state => state.account.page);
+    const accountCount = useSelector(state => state.account.count);
+    const accountPage = useSelector(state => state.account.page);
+    const researchCount = useSelector(state => state.research.count);
+    const researchPage = useSelector(state => state.research.page);
 
     const [drawer, setDrawer] = useState(false);
 
     useEffect(() => {
-        dispatch(loadAccounts(count, page * count));
+        dispatch(loadAccounts(accountCount, accountPage * accountCount));
+        dispatch(loadResearches(researchCount, researchPage * researchCount))
     }, []);
     return (
         <React.StrictMode>
@@ -74,6 +79,12 @@ const App = () => {
                     </Route>
                     <Route path="/researches">
                         <Researches />
+                    </Route>
+                    <Route path="/research/new">
+                        <Research />
+                    </Route>
+                    <Route path="/research/:id">
+                        <Research />
                     </Route>
                 </Switch>
             </Router>

@@ -51,6 +51,7 @@ export const createResearch = (research) => {
         dispatch(setResearchesErrorAction(""));
         dispatch(setResearchesLoadingAction(true));
         try {
+            console.log(JSON.stringify(research))
             const result = await axios.post(url, JSON.stringify(research), {
                 headers: {
                     'Accept': 'application/json',
@@ -58,7 +59,7 @@ export const createResearch = (research) => {
                 }
             });
             if (result.data.success) {
-                dispatch(setResearchesAction(result.data.payload));
+                dispatch(addResearchAction(result.data.payload));
             } else {
                 dispatch(setResearchesErrorAction(result.data.payload));
             }
@@ -101,7 +102,7 @@ export const removeResearch = (research, count, offset) => {
         try {
             const result = await axios.delete(`${url}/${research.id}`);
             if (result.data.success) {
-                dispatch(loadResearch(count, offset));
+                dispatch(loadResearches(count, offset));
             } else {
                 dispatch(setResearchesErrorAction(result.data.payload));
             }
