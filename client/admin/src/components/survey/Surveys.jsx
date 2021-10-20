@@ -95,7 +95,7 @@ const Surveys = () => {
             </Button>
             <Button sx={{my: 2, ml: 2}}
                     component={Link}
-                    to={ `/research/${selectedSurvey?.id}` }
+                    to={ `/survey/${selectedSurvey?.id}` }
                     variant="outlined"
                     disabled={!selectedSurvey?.id}>
                 { t("survey:editSurveyButton") }

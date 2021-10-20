@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { loadAccount } from "../api/account";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 const useAccount = (id) => {
     const accounts = useSelector(state => state.account.accounts);

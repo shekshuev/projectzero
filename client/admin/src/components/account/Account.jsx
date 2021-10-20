@@ -56,7 +56,6 @@ const Account = () => {
                                      value={account?.username ?? ""}
                                      onChange={e=>setAccount({...account, username: e.target.value})}
                                      label={t("account:username")}
-                                     variant="standard"
                                      disabled={loading}/>
                 </Grid>
                 <Grid item>
@@ -64,7 +63,6 @@ const Account = () => {
                                      value={account?.surname ?? ""}
                                      onChange={e=>setAccount({...account, surname: e.target.value})}
                                      label={t("account:surname")}
-                                     variant="standard"
                                      disabled={loading}/>
                 </Grid>
                 <Grid item>
@@ -72,7 +70,6 @@ const Account = () => {
                                      value={account?.firstName ?? ""}
                                      onChange={e=>setAccount({...account, firstName: e.target.value})}
                                      label={t("account:firstName")}
-                                     variant="standard"
                                      disabled={loading}/>
                 </Grid>
                 <Grid item>
@@ -80,7 +77,6 @@ const Account = () => {
                                      value={account?.lastName ?? ""}
                                      onChange={e=>setAccount({...account, lastName: e.target.value})}
                                      label={t("account:lastName")}
-                                     variant="standard"
                                      disabled={loading}/>
                 </Grid>
                 <Grid item>
@@ -89,7 +85,6 @@ const Account = () => {
                                      onChange={e=>setAccount({...account, password: e.target.value})}
                                      label={t("account:password")}
                                      type="password"
-                                     variant="standard"
                                      disabled={loading}/>
                 </Grid>
                 <Grid item>
@@ -98,11 +93,10 @@ const Account = () => {
                                      onChange={e=>setAccount({...account, confirmPassword: e.target.value})}
                                      label={t("account:confirmPassword")}
                                      type="password"
-                                     variant="standard"
                                      disabled={loading}/>
                 </Grid>
                 <Grid item>
-                    <FormControl variant="standard" sx={{ width: "300px" }}>
+                    <FormControl sx={{ width: "300px" }}>
                         <InputLabel>{t("account:role")}</InputLabel>
                         <Select fullWidth
                                 value={account?.role ?? ""}

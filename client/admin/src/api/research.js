@@ -53,7 +53,6 @@ export const createResearch = (research) => {
         dispatch(setResearchesErrorAction(""));
         dispatch(setResearchesLoadingAction(true));
         try {
-            console.log(JSON.stringify(research))
             const result = await axios.post(url, JSON.stringify(research), {
                 headers: {
                     'Accept': 'application/json',

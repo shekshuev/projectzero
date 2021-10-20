@@ -58,7 +58,6 @@ const Research = () => {
                                      value={research?.title ?? ""}
                                      onChange={e=>setResearch({...research, title: e.target.value})}
                                      label={t("research:title")}
-                                     variant="standard"
                                      disabled={loading}/>
                 </Grid>
                 <Grid item>
@@ -66,7 +65,6 @@ const Research = () => {
                                      value={research?.description ?? ""}
                                      onChange={e=>setResearch({...research, description: e.target.value})}
                                      label={t("research:description")}
-                                     variant="standard"
                                      disabled={loading}/>
                 </Grid>
                 <Grid item>
@@ -74,7 +72,7 @@ const Research = () => {
                         <DatePicker value={research?.beginDate ?? null}
                                     label={t("research:beginDate")}
                                     onChange={date=>setResearch({...research, beginDate: date})}
-                                    renderInput={(params) => <CustomTextField variant="standard" fullWidth {...params} />} />
+                                    renderInput={(params) => <CustomTextField fullWidth {...params} />} />
                     </LocalizationProvider>
                 </Grid>
                 <Grid item>
@@ -82,7 +80,7 @@ const Research = () => {
                         <DatePicker value={research?.endDate ?? null}
                                     label={t("research:endDate")}
                                     onChange={date=>setResearch({...research, endDate: date})}
-                                    renderInput={(params) => <CustomTextField variant="standard" fullWidth {...params} />} />
+                                    renderInput={(params) => <CustomTextField fullWidth {...params} />} />
                     </LocalizationProvider>
                 </Grid>
                 <Grid item>

@@ -53,7 +53,6 @@ export const createSurvey = (survey) => {
         dispatch(setSurveysErrorAction(""));
         dispatch(setSurveysLoadingAction(true));
         try {
-            console.log(JSON.stringify(survey))
             const result = await axios.post(url, JSON.stringify(survey), {
                 headers: {
                     'Accept': 'application/json',

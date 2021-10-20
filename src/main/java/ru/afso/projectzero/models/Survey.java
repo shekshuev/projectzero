@@ -10,9 +10,13 @@ public class Survey extends BaseModel {
 
     private Date createdAt;
 
-    private Date startDate;
+    private Date beginDate;
 
     private Date endDate;
+
+    private String title;
+
+    private String description;
 
     private List<Question> questions;
 
@@ -22,6 +26,22 @@ public class Survey extends BaseModel {
     // Change to geojson or something else
     private Object position;
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -30,12 +50,12 @@ public class Survey extends BaseModel {
         this.createdAt = createdAt;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getBeginDate() {
+        return beginDate;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
     }
 
     public Date getEndDate() {

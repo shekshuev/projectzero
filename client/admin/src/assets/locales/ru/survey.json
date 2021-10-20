@@ -8,5 +8,12 @@
         }
     },
     "createSurveyButton": "Создать новый опрос",
-    "editSurveyButton": "Редактировать опрос"
+    "editSurveyButton": "Редактировать опрос",
+    "updateSurveyButton": "Сохранить изменения",
+    "removeSurveyButton": "Удалить опрос",
+    "title": "Название",
+    "description": "Описание",
+    "beginDate": "Дата начала",
+    "endDate": "Дата окончания",
+    "removeSurveyDialogMessage": "Вы действительно хотите удалить выбранный опрос?"
 }

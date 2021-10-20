@@ -10,8 +10,10 @@ import Account from "./components/account/Account";
 import Researches from "./components/research/Researches";
 import Research from "./components/research/Research";
 import Surveys from "./components/survey/Surveys";
+import Survey from "./components/survey/Survey";
 import { loadAccounts } from "./api/account";
 import { loadResearches } from "./api/research";
+import { loadSurveys } from "./api/survey";
 import { useTranslation } from "react-i18next";
 
 const App = () => {
@@ -24,12 +26,15 @@ const App = () => {
     const accountPage = useSelector(state => state.account.page);
     const researchCount = useSelector(state => state.research.count);
     const researchPage = useSelector(state => state.research.page);
+    const surveyCount = useSelector(state => state.survey.count);
+    const surveyPage = useSelector(state => state.survey.page);
 
     const [drawer, setDrawer] = useState(false);
 
     useEffect(() => {
         dispatch(loadAccounts(accountCount, accountPage * accountCount));
-        dispatch(loadResearches(researchCount, researchPage * researchCount))
+        dispatch(loadResearches(researchCount, researchPage * researchCount));
+        dispatch(loadSurveys(surveyCount, surveyPage * surveyCount));
     }, []);
     return (
         <React.StrictMode>
@@ -98,6 +103,12 @@ const App = () => {
                     </Route>
                     <Route path="/surveys">
                         <Surveys />
+                    </Route>
+                    <Route path="/survey/new">
+                        <Survey />
+                    </Route>
+                    <Route path="/survey/:id">
+                        <Survey />
                     </Route>
                 </Switch>
             </Router>
