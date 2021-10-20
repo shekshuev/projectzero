@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace surveyclient.Models
 {
@@ -24,12 +25,17 @@ namespace surveyclient.Models
         /// <summary>
         /// Название опроса.
         /// </summary>
-        private string Title { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Описание опроса.
         /// </summary>
-        private string Description { get; set; }
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Список вопросов.
+        /// </summary>
+        public List<Question> Questions { get; set; }
     }
 }
 

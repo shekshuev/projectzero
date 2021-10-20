@@ -12,7 +12,7 @@ namespace surveyclient.Models
         /// <summary>
         /// Код вопроса, для пользователя скрыт
         /// </summary>
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         /// <summary>
         /// Либо true, если вопрос выбран, либо false, если не выбран,

@@ -23,12 +23,12 @@ namespace surveyclient.Models
         /// <summary>
         /// Название исследования.
         /// </summary>
-        private string Title { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Описание исследования.
         /// </summary>
-        private string Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Список уникальных опросов.
