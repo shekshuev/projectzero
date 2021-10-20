@@ -26,6 +26,11 @@ namespace surveyclient.Models
         private string Title { get; set; }
 
         /// <summary>
+        /// Описание исследования.
+        /// </summary>
+        private string Description { get; set; }
+
+        /// <summary>
         /// Список уникальных опросов.
         /// </summary>
         public List<Survey> Surveys { get; set; }

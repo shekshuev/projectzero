@@ -20,6 +20,16 @@ namespace surveyclient.Models
         /// Должно быть выставлено при завершении опроса
         /// </summary>
         public DateTime? EndDate { get; set; }
+
+        /// <summary>
+        /// Название опроса.
+        /// </summary>
+        private string Title { get; set; }
+
+        /// <summary>
+        /// Описание опроса.
+        /// </summary>
+        private string Description { get; set; }
     }
 }
 
