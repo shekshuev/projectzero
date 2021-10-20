@@ -23,10 +23,12 @@ export const loadAccounts = (count, offset) => {
             } else {
                 dispatch(setAccountsErrorAction(result.data.payload.message));
                 dispatch(setAccountsAction([]));
+                dispatch(setAccountsTotalCountAction(0));
             }
         } catch (e) {
             dispatch(setAccountsErrorAction(e.message));
             dispatch(setAccountsAction([]));
+            dispatch(setAccountsTotalCountAction(0));
         } finally {
             dispatch(setAccountsLoadingAction(false));
         }

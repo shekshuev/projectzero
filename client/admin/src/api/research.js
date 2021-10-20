@@ -24,10 +24,12 @@ export const loadResearches = (count, offset) => {
             } else {
                 dispatch(setResearchesErrorAction(result.data.payload.message));
                 dispatch(setResearchesAction([]));
+                dispatch(setResearchesTotalCountAction(0));
             }
         } catch (e) {
             dispatch(setResearchesErrorAction(e.message));
             dispatch(setResearchesAction([]));
+            dispatch(setResearchesTotalCountAction(0));
         } finally {
             dispatch(setResearchesLoadingAction(false));
         }
