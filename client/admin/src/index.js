@@ -12,13 +12,15 @@ import appTranslationRU from "./assets/locales/ru/app.json";
 import commonTranslationRU from "./assets/locales/ru/common.json";
 import accountTranslationRU from "./assets/locales/ru/account.json";
 import researchTranslationRU from "./assets/locales/ru/research.json";
+import surveyTranslationRU from "./assets/locales/ru/survey.json";
 
 const resources = {
     ru: {
         app: appTranslationRU,
         common: commonTranslationRU,
         account: accountTranslationRU,
-        research: researchTranslationRU
+        research: researchTranslationRU,
+        survey: surveyTranslationRU
     }
 };
 

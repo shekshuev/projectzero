@@ -2,6 +2,7 @@ package ru.afso.projectzero.models;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "researches")
 public class Research extends BaseModel {
@@ -16,7 +17,7 @@ public class Research extends BaseModel {
 
     private String description;
 
-    private Survey survey;
+    private List<Survey> surveys;
 
     public Date getCreatedAt() {
         return createdAt;
@@ -58,11 +59,11 @@ public class Research extends BaseModel {
         this.description = description;
     }
 
-    public Survey getSurvey() {
-        return survey;
+    public List<Survey> getSurveys() {
+        return surveys;
     }
 
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
+    public void setSurveys(List<Survey> surveys) {
+        this.surveys = surveys;
     }
 }

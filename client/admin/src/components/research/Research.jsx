@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Container, TextField, Grid, Button, Select, MenuItem, FormControl, InputLabel,
-    Dialog, DialogContent, DialogTitle, DialogActions } from "@mui/material";
+import { Container, Grid, Button, Dialog, DialogContent, DialogTitle, DialogActions } from "@mui/material";
 import DatePicker from '@mui/lab/DatePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CustomTextField from "../ui/CustomTextField";
 import { useTranslation } from "react-i18next";
-import {Link, useHistory, useParams} from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useResearch from "../../hooks/useResearch";
 import { updateResearch, createResearch, removeResearch } from "../../api/research";

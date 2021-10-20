@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, IconButton, Toolbar, Typography, Drawer,
     MenuList, MenuItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import { AccountCircle, ListAlt } from "@material-ui/icons"
-import MenuIcon from "@material-ui/icons/Menu";
+import { AccountCircle, ListAlt, StackedBarChart, Menu } from "@mui/icons-material"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Accounts from "./components/account/Accounts";
 import Account from "./components/account/Account";
 import Researches from "./components/research/Researches";
 import Research from "./components/research/Research";
+import Surveys from "./components/survey/Surveys";
 import { loadAccounts } from "./api/account";
 import { loadResearches } from "./api/research";
 import { useTranslation } from "react-i18next";
@@ -41,7 +41,7 @@ const App = () => {
                                 aria-label="menu"
                                 onClick={() => setDrawer(true)}
                                 sx={{ mr: 2 }}>
-                        <MenuIcon />
+                        <Menu />
                     </IconButton>
                     <Typography variant="h6" component="div">
                         { t("common:header") }
@@ -49,7 +49,10 @@ const App = () => {
                 </Toolbar>
             </AppBar>
             <Router>
-                <Drawer anchor="left" open={drawer} onClose={() => setDrawer(false)}>
+                <Drawer anchor="left"
+                        open={drawer}
+                        onClose={() => setDrawer(false)}
+                        onClick={() => setDrawer(false)}>
                     <MenuList>
                         <MenuItem component={Link}
                                   to="/accounts">
@@ -61,9 +64,16 @@ const App = () => {
                         <MenuItem component={Link}
                                   to="/researches">
                             <ListItemIcon>
-                                <ListAlt />
+                                <StackedBarChart />
                             </ListItemIcon>
                             <ListItemText>{ t("app:menu:researches") }</ListItemText>
+                        </MenuItem>
+                        <MenuItem component={Link}
+                                  to="/surveys">
+                            <ListItemIcon>
+                                <ListAlt />
+                            </ListItemIcon>
+                            <ListItemText>{ t("app:menu:surveys") }</ListItemText>
                         </MenuItem>
                     </MenuList>
                 </Drawer>
@@ -85,6 +95,9 @@ const App = () => {
                     </Route>
                     <Route path="/research/:id">
                         <Research />
+                    </Route>
+                    <Route path="/surveys">
+                        <Surveys />
                     </Route>
                 </Switch>
             </Router>

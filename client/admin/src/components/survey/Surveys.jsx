@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { setResearchesPageAction } from "../../store/reducers/researchReducer";
-import { loadResearches } from "../../api/research";
 import {
     Button,
     CircularProgress, Container,
@@ -15,62 +13,62 @@ import {
     TableHead, TablePagination,
     TableRow
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { setSurveysPageAction } from "../../store/reducers/surveyReducer";
+import { loadSurveys } from "../../api/survey";
+import {Link} from "react-router-dom";
 
-const Researches = () => {
+const Surveys = () => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
 
-    const [selectedResearch, setSelectedResearch] = useState();
+    const [selectedSurvey, setSelectedSurvey] = useState();
 
-    const researches = useSelector(state => state.research.researches);
-    const total = useSelector(state => state.research.totalCount);
-    const count = useSelector(state => state.research.count);
-    const page = useSelector(state => state.research.page);
-    const loading = useSelector(state => state.research.loading);
+    const surveys = useSelector(state => state.survey.surveys);
+    const total = useSelector(state => state.survey.totalCount);
+    const count = useSelector(state => state.survey.count);
+    const page = useSelector(state => state.survey.page);
+    const loading = useSelector(state => state.survey.loading);
 
-    const onTableRowClick = (research) => {
-        setSelectedResearch(research);
+    const onTableRowClick = (survey) => {
+        setSelectedSurvey(survey);
     }
 
     const onPageChanged = (e, page) => {
-        dispatch(setResearchesPageAction(page));
-        loadResearches(count, page * count);
+        dispatch(setSurveysPageAction(page));
+        loadSurveys(count, page * count);
     }
 
     return (
         <Container>
             <TableContainer component={Paper} sx={{mt: 5}}>
                 <Table>
-                    <caption>{ t("research:table:caption") }</caption>
+                    <caption>{ t("survey:table:caption") }</caption>
                     <TableHead>
                         <TableRow>
-                            <TableCell>{ t("research:table:headers:id") }</TableCell>
-                            <TableCell>{ t("research:table:headers:title") }</TableCell>
-                            <TableCell>{ t("research:table:headers:beginDate") }</TableCell>
-                            <TableCell>{ t("research:table:headers:endDate") }</TableCell>
+                            <TableCell>{ t("survey:table:headers:id") }</TableCell>
+                            <TableCell>{ t("survey:table:headers:title") }</TableCell>
+                            <TableCell>{ t("survey:table:headers:questionCount") }</TableCell>
                         </TableRow>
                     </TableHead>
                     {
                         loading ?
                             <TableBody>
                                 <TableRow>
-                                    <TableCell colSpan={4} align={"center"}>
+                                    <TableCell colSpan={3} align={"center"}>
                                         <CircularProgress />
                                     </TableCell>
                                 </TableRow>
                             </TableBody> :
                             <TableBody>
                                 {
-                                    researches.map((research) => (
+                                    surveys.map((survey) => (
                                         <TableRow hover
-                                                  selected={selectedResearch?.id === research.id}
-                                                  key={research.id}
-                                                  onClick={() => onTableRowClick(research)}>
-                                            <TableCell>{ research.id }</TableCell>
-                                            <TableCell>{ research.title }</TableCell>
-                                            <TableCell>{ research.beginDate }</TableCell>
-                                            <TableCell>{ research.endDate }</TableCell>
+                                                  selected={selectedSurvey?.id === survey.id}
+                                                  key={survey.id}
+                                                  onClick={() => onTableRowClick(survey)}>
+                                            <TableCell>{ survey.id }</TableCell>
+                                            <TableCell>{ survey.title }</TableCell>
+                                            <TableCell>{ survey.questions?.length ?? 0 }</TableCell>
                                         </TableRow>
                                     ))
                                 }
@@ -91,19 +89,19 @@ const Researches = () => {
             </TableContainer>
             <Button sx={{my: 2}}
                     component={Link}
-                    to="/research/new"
+                    to="/survey/new"
                     variant="contained">
-                { t("research:createResearchButton") }
+                { t("survey:createSurveyButton") }
             </Button>
             <Button sx={{my: 2, ml: 2}}
                     component={Link}
-                    to={ `/research/${selectedResearch?.id}` }
+                    to={ `/research/${selectedSurvey?.id}` }
                     variant="outlined"
-                    disabled={!selectedResearch?.id}>
-                { t("research:editResearchButton") }
+                    disabled={!selectedSurvey?.id}>
+                { t("survey:editSurveyButton") }
             </Button>
         </Container>
     );
 };
 
-export default Researches;
+export default Surveys;

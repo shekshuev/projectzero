@@ -1,0 +1,12 @@
+{
+    "table": {
+        "caption": "Список социологических опросов",
+        "headers": {
+            "id": "ID",
+            "title": "Название",
+            "questionCount": "Количество вопросов"
+        }
+    },
+    "createSurveyButton": "Создать новый опрос",
+    "editSurveyButton": "Редактировать опрос"
+}
