@@ -10,6 +10,8 @@ public class Question extends BaseModel{
 
     private List<Answer> answers;
 
+    private boolean required;
+
     public String getTitle() {
         return title;
     }
@@ -32,5 +34,13 @@ public class Question extends BaseModel{
 
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }

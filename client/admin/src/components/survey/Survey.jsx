@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Grid, Button, Dialog, DialogContent, DialogTitle, DialogActions } from "@mui/material";
-import CustomTextField from "../ui/CustomTextField";
+import { Container, Grid, Button, Dialog, DialogContent, DialogTitle, DialogActions,
+    Paper, TextField} from "@mui/material";
 import useSurvey from "../../hooks/useSurvey";
 import { createSurvey, updateSurvey, removeSurvey } from "../../api/survey";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import DatePicker from "@mui/lab/DatePicker";
 import LoadingButton from "@mui/lab/LoadingButton";
+import Questions from "./Questions";
 
 const Survey = () => {
     const { t } = useTranslation();
@@ -47,26 +45,55 @@ const Survey = () => {
         deleteSurveyAsync(survey, page, count, dispatch).then(() => history.replace("/surveys"));
     };
 
+    const onQuestionAdded = (question) => {
+        setSurvey({...survey, questions: [...survey.questions, question]});
+    }
+
+    const onQuestionChanged = (question) => {
+        const questions = survey.questions.map(q => {
+            if (q.id === question.id) {
+                return question;
+            } else {
+                return q;
+            }
+        });
+        setSurvey({...survey, questions: questions});
+    }
+
     return (
-        <Container sx={{mt:2}}>
-            <Grid spacing={2}
+        <Container sx={{mt:4}}>
+            <Paper sx={{px:2, pb:2}}>
+                <Grid container
+                      direction="row"
+                      spacing={2}>
+                    <Grid item xs={6}>
+                        <TextField fullWidth
+                                   value={survey?.title ?? ""}
+                                   onChange={e=>setSurvey({...survey, title: e.target.value})}
+                                   label={t("survey:title")}
+                                   disabled={loading}/>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField fullWidth
+                                   value={survey?.description ?? ""}
+                                   onChange={e=>setSurvey({...survey, description: e.target.value})}
+                                   label={t("survey:description")}
+                                   disabled={loading}/>
+                    </Grid>
+                </Grid>
+            </Paper>
+
+            <Questions questions={survey?.questions}
+                       questionAdded={onQuestionAdded}
+                       questionChanged={onQuestionChanged}
+                       loading={loading}/>
+
+
+            <Grid sx={{mt:2}}
+                  spacing={2}
                   container
-                  direction="column"
+                  direction="row"
                   alignItems="center">
-                <Grid item>
-                    <CustomTextField fullWidth
-                                     value={survey?.title ?? ""}
-                                     onChange={e=>setSurvey({...survey, title: e.target.value})}
-                                     label={t("survey:title")}
-                                     disabled={loading}/>
-                </Grid>
-                <Grid item>
-                    <CustomTextField fullWidth
-                                     value={survey?.description ?? ""}
-                                     onChange={e=>setSurvey({...survey, description: e.target.value})}
-                                     label={t("survey:description")}
-                                     disabled={loading}/>
-                </Grid>
                 <Grid item>
                     <LoadingButton variant="contained"
                                    loading={loading}

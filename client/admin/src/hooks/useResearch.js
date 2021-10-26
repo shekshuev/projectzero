@@ -16,7 +16,7 @@ const useResearch = (id) => {
             };
             getResearch();
         }
-    }, [research])
+    }, [])
     return [research, setResearch];
 }
 

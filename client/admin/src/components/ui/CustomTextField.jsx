@@ -3,7 +3,7 @@ import React from "react";
 
 const CustomTextField = (props) => {
     return (
-        <TextField sx={{ width: "300px" }}  {...props}/>
+        <TextField sx={{ minWidth: "300px" }}  {...props}/>
     )
 }
 

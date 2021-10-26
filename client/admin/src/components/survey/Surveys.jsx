@@ -13,9 +13,9 @@ import {
     TableHead, TablePagination,
     TableRow
 } from "@mui/material";
-import { setSurveysPageAction } from "../../store/reducers/surveyReducer";
+import { setSurveysPageAction, setSurveysCountAction } from "../../store/reducers/surveyReducer";
 import { loadSurveys } from "../../api/survey";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Surveys = () => {
     const dispatch = useDispatch();
@@ -35,7 +35,13 @@ const Surveys = () => {
 
     const onPageChanged = (e, page) => {
         dispatch(setSurveysPageAction(page));
-        loadSurveys(count, page * count);
+        dispatch(loadSurveys(count, page * count));
+    }
+
+    const onRowsPerPageChanged = (e) => {
+        dispatch(setSurveysPageAction(0));
+        dispatch(setSurveysCountAction(e.target.value));
+        dispatch(loadSurveys(e.target.value, 0));
     }
 
     return (
@@ -75,11 +81,13 @@ const Surveys = () => {
                             </TableBody>
                     }
                     {
-                        loading ? "" :
+                        loading ? null :
                             <TableFooter>
                                 <TableRow>
                                     <TablePagination count={total}
                                                      page={page}
+                                                     rowsPerPageOptions={[5,10,25,]}
+                                                     onRowsPerPageChange={onRowsPerPageChanged}
                                                      onPageChange={onPageChanged}
                                                      rowsPerPage={count} />
                                 </TableRow>

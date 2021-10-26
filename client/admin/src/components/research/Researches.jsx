@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { setResearchesPageAction } from "../../store/reducers/researchReducer";
+import { setResearchesPageAction, setResearchesCountAction } from "../../store/reducers/researchReducer";
 import { loadResearches } from "../../api/research";
 import {
     Button,
@@ -35,7 +35,13 @@ const Researches = () => {
 
     const onPageChanged = (e, page) => {
         dispatch(setResearchesPageAction(page));
-        loadResearches(count, page * count);
+        dispatch(loadResearches(count, page * count));
+    }
+
+    const onRowsPerPageChanged = (e) => {
+        dispatch(setResearchesPageAction(0));
+        dispatch(setResearchesCountAction(e.target.value));
+        dispatch(loadResearches(e.target.value, 0));
     }
 
     return (
@@ -77,11 +83,13 @@ const Researches = () => {
                             </TableBody>
                     }
                     {
-                        loading ? "" :
+                        loading ? null :
                             <TableFooter>
                                 <TableRow>
                                     <TablePagination count={total}
                                                      page={page}
+                                                     rowsPerPageOptions={[5,10,25,]}
+                                                     onRowsPerPageChange={onRowsPerPageChanged}
                                                      onPageChange={onPageChanged}
                                                      rowsPerPage={count} />
                                 </TableRow>

@@ -15,5 +15,23 @@
     "description": "Описание",
     "beginDate": "Дата начала",
     "endDate": "Дата окончания",
-    "removeSurveyDialogMessage": "Вы действительно хотите удалить выбранный опрос?"
+    "removeSurveyDialogMessage": "Вы действительно хотите удалить выбранный опрос?",
+    "questions": {
+        "header": "Список вопросов",
+        "empty": "Нет вопросов",
+        "addQuestionButton": "Создать вопрос",
+        "question": {
+            "title": "Текст вопроса",
+            "type": "Тип вопроса",
+            "types": {
+                "single": "Один ответ",
+                "multiple": "Несколько ответов",
+                "open": "Открытый"
+            },
+            "addAnswer": "Добавить ответ",
+            "answer": {
+                "placeholder": "Введите ответ"
+            }
+        }
+    }
 }

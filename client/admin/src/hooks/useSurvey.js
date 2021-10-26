@@ -8,15 +8,28 @@ const useSurvey = (id) => {
 
     useEffect(() => {
         if (!survey) {
-            const getSurvey = async () => {
-                const result = await loadSurvey(id);
-                if (result.success) {
-                    setSurvey(result.payload);
-                }
-            };
-            getSurvey();
+            if (id) {
+                const getSurvey = async () => {
+                    const result = await loadSurvey(id);
+                    if (result.success) {
+
+                        setSurvey({...result.payload, questions: result.payload?.questions ?? []});
+                    }
+                };
+                getSurvey();
+            } else {
+                setSurvey({
+                    createdAt: null,
+                    beginDate: null,
+                    endDate: null,
+                    title: "",
+                    description: "",
+                    questions: [],
+                    research: null
+                })
+            }
         }
-    }, [survey])
+    }, [])
     return [survey, setSurvey];
 }
 

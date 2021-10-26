@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { loadAccounts } from "../../api/account";
-import { setAccountsPageAction } from "../../store/reducers/accountReducer";
+import { setAccountsPageAction, setAccountsCountAction } from "../../store/reducers/accountReducer";
 
 const Accounts = () => {
     const dispatch = useDispatch();
@@ -25,7 +25,13 @@ const Accounts = () => {
 
     const onPageChanged = (e, page) => {
         dispatch(setAccountsPageAction(page));
-        loadAccounts(count, page * count);
+        dispatch(loadAccounts(count, page * count));
+    }
+
+    const onRowsPerPageChanged = (e) => {
+        dispatch(setAccountsPageAction(0));
+        dispatch(setAccountsCountAction(e.target.value));
+        dispatch(loadAccounts(e.target.value, 0));
     }
 
     return (
@@ -67,11 +73,13 @@ const Accounts = () => {
                             </TableBody>
                     }
                     {
-                        loading ? "" :
+                        loading ? null :
                             <TableFooter>
                                 <TableRow>
                                     <TablePagination count={total}
                                                      page={page}
+                                                     rowsPerPageOptions={[5,10,25,]}
+                                                     onRowsPerPageChange={onRowsPerPageChanged}
                                                      onPageChange={onPageChanged}
                                                      rowsPerPage={count} />
                                 </TableRow>

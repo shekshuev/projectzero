@@ -16,7 +16,7 @@ const useAccount = (id) => {
             };
             getAccount();
         }
-    }, [account])
+    }, [])
     return [account, setAccount];
 }
 
