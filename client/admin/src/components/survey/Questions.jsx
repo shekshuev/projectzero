@@ -4,7 +4,7 @@ import { Add } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import Question from "./Question";
 
-const Questions = ({questionAdded, questionChanged, questions, loading}) => {
+const Questions = ({questionAdded, questionChanged, questionDeleted, questions, loading}) => {
 
     const { t } = useTranslation();
 
@@ -33,7 +33,8 @@ const Questions = ({questionAdded, questionChanged, questions, loading}) => {
                             <Question key={i}
                                       question={question}
                                       loading={loading}
-                                      questionChanged={questionChanged}/>
+                                      questionChanged={questionChanged}
+                                      questionDeleted={questionDeleted}/>
                         ))
                         :
                         <Grid item>

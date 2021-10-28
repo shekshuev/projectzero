@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import {  Grid, Paper, TextField, Select, FormControl, InputLabel, MenuItem, Button } from "@mui/material";
+import { Grid, Paper, TextField, Select, FormControl, FormGroup, FormControlLabel, Switch,
+    InputLabel, MenuItem, Button, IconButton, Divider } from "@mui/material";
+import { Delete, Close, ContentCopy } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 
-const Question = ({question, loading, questionChanged}) => {
+const Question = ({question, loading, questionChanged, questionDeleted}) => {
     const { t } = useTranslation();
 
     const [ types ] = useState([
@@ -42,6 +44,14 @@ const Question = ({question, loading, questionChanged}) => {
         questionChanged({...question, answers: answers});
     }
 
+    const deleteAnswer = (answer) => {
+        questionChanged({...question, answers: question?.answers?.filter(a => a.id !== answer.id)});
+    }
+
+    const deleteQuestion = () => {
+        questionDeleted(question);
+    }
+
     return (
         <Grid item sx={{mt:2}}>
             <Paper sx={{px:2, pb:2}}>
@@ -75,21 +85,78 @@ const Question = ({question, loading, questionChanged}) => {
                               direction="column"
                               spacing={2}>
                             {
-                                question?.answers?.map(answer => (
-                                    <Grid item xs={12}
-                                          key={answer.id}>
-                                        <TextField variant="standard"
-                                                   value={answer.text}
-                                                   onChange={e=>changeAnswer({...answer, text:e.target.value})}
-                                                   fullWidth
-                                                   label={t("survey:questions:question:answer:placeholder")}/>
-                                    </Grid>
-                                ))
+                                question.type === "open" ? null :
+                                    <React.Fragment>
+                                        <Grid item xs={12}>
+                                            <Grid container
+                                                  direction="row"
+                                                  spacing={2}>
+                                                {
+                                                    question?.answers?.map(answer => (
+                                                        <React.Fragment key={answer.id}>
+                                                            <Grid item xs={6}>
+                                                                <TextField variant="standard"
+                                                                           value={answer.text}
+                                                                           onChange={e=>changeAnswer({...answer, text:e.target.value})}
+                                                                           fullWidth
+                                                                           label={t("survey:questions:question:answer:answer")}/>
+                                                            </Grid>
+                                                            <Grid item xs={5}>
+                                                                <TextField variant="standard"
+                                                                           value={answer.code}
+                                                                           onChange={e=>changeAnswer({...answer, code:e.target.value})}
+                                                                           fullWidth
+                                                                           label={t("survey:questions:question:answer:code")}/>
+                                                            </Grid>
+                                                            <Grid item xs={1}
+                                                                  container
+                                                                  justifyContent="flex-end"
+                                                                  alignItems="flex-end">
+                                                                <IconButton onClick={()=>deleteAnswer(answer)}>
+                                                                    <Close />
+                                                                </IconButton>
+                                                            </Grid>
+                                                        </React.Fragment>
+                                                    ))
+                                                }
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Button variant="text"
+                                                    onClick={addAnswer}
+                                                    disabled={loading}>{t("survey:questions:question:addAnswer")}</Button>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Divider />
+                                        </Grid>
+                                    </React.Fragment>
                             }
-                            <Grid item xs={12}>
-                                <Button variant="text"
-                                        onClick={addAnswer}
-                                        disabled={loading}>{t("survey:questions:question:addAnswer")}</Button>
+                            <Grid item xs={12}
+                                  container
+                                  direction="row"
+                                  justifyContent="flex-end"
+                                  spacing={2}>
+                                <Grid item>
+                                    <IconButton>
+                                        <ContentCopy />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item>
+                                    <IconButton onClick={deleteQuestion}>
+                                        <Delete />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item>
+                                    <Divider orientation="vertical" />
+                                </Grid>
+                                <Grid item>
+                                    <FormGroup>
+                                        <FormControlLabel control={<Switch checked={question?.required}
+                                                                           onChange={e=>questionChanged({...question, required:e.target.checked})}/>}
+                                                          labelPlacement="start"
+                                                          label={t("survey:questions:question:required")} />
+                                    </FormGroup>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>

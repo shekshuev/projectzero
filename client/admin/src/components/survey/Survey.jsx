@@ -46,18 +46,28 @@ const Survey = () => {
     };
 
     const onQuestionAdded = (question) => {
-        setSurvey({...survey, questions: [...survey.questions, question]});
+        if (question) {
+            setSurvey({...survey, questions: [...survey.questions, question]});
+        }
     }
 
     const onQuestionChanged = (question) => {
-        const questions = survey.questions.map(q => {
-            if (q.id === question.id) {
-                return question;
-            } else {
-                return q;
-            }
-        });
-        setSurvey({...survey, questions: questions});
+        if (question) {
+            const questions = survey.questions.map(q => {
+                if (q.id === question.id) {
+                    return question;
+                } else {
+                    return q;
+                }
+            });
+            setSurvey({...survey, questions: questions});
+        }
+    }
+
+    const onQuestionDeleted = (question) => {
+        if (question) {
+            setSurvey({...survey, questions: survey.questions?.filter(q => q.id !== question.id)})
+        }
     }
 
     return (
@@ -86,6 +96,7 @@ const Survey = () => {
             <Questions questions={survey?.questions}
                        questionAdded={onQuestionAdded}
                        questionChanged={onQuestionChanged}
+                       questionDeleted={onQuestionDeleted}
                        loading={loading}/>
 
 
