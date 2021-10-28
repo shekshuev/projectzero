@@ -22,6 +22,11 @@ namespace surveyclient.Models
         /// </summary>
         public List<Answer> Answers { get; set; }
 
+        /// <summary>
+        /// Обязательный или нет вопрос
+        /// </summary>
+        public bool Required { get; set; }
+
     }
 }
 
