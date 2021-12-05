@@ -1,16 +1,10 @@
 package ru.afso.projectzero.models;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.Date;
 
-@Document(collection = "accounts")
-public class Account extends BaseModel{
+public class AccountModel extends BaseModel{
 
     private String username;
-
-    private String passwordHash;
 
     private String firstName;
 
@@ -24,6 +18,10 @@ public class Account extends BaseModel{
 
     public String getUsername() {
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFirstName() {
