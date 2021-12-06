@@ -1,25 +1,40 @@
 package ru.afso.projectzero.entities;
 
-import org.springframework.data.mongodb.core.mapping.Document;
 import ru.afso.projectzero.models.BaseModel;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "researches")
-public class ResearchEntity extends BaseEntity implements ModelConvertable {
+@Entity
+@Table(name = "researches")
+public class ResearchEntity implements ModelConvertable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(nullable = false)
     private Date createdAt;
 
     private Date beginDate;
 
     private Date endDate;
 
+    @Column(nullable = false, unique = true)
     private String title;
 
     private String description;
 
     private List<SurveyEntity> surveys;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Date getCreatedAt() {
         return createdAt;
@@ -61,6 +76,7 @@ public class ResearchEntity extends BaseEntity implements ModelConvertable {
         this.description = description;
     }
 
+    @OneToMany(mappedBy = "research")
     public List<SurveyEntity> getSurveys() {
         return surveys;
     }

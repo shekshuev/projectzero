@@ -7,6 +7,7 @@ import ru.afso.projectzero.repositories.SurveyRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class SurveyService {
@@ -19,11 +20,11 @@ public class SurveyService {
     }
 
     public List<SurveyEntity> getSurveys(int offset, int count) {
-        return surveyRepository.findAll()
-                .stream().skip(offset).limit(count).collect(Collectors.toList());
+        return StreamSupport.stream(surveyRepository.findAll().spliterator(), false)
+                .skip(offset).limit(count).collect(Collectors.toList());
     }
 
-    public SurveyEntity getSurveyById(String id) {
+    public SurveyEntity getSurveyById(long id) {
         return surveyRepository.findById(id).orElse(null);
     }
 
@@ -36,7 +37,7 @@ public class SurveyService {
         return surveyRepository.save(survey);
     }
 
-    public void deleteSurveyById(String id) {
+    public void deleteSurveyById(long id) {
         surveyRepository.deleteById(id);
     }
 

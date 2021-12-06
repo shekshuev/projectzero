@@ -1,8 +1,8 @@
 package ru.afso.projectzero.repositories;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.CrudRepository;
 import ru.afso.projectzero.entities.SurveyEntity;
 
-public interface SurveyRepository extends MongoRepository<SurveyEntity, String> {
+public interface SurveyRepository extends CrudRepository<SurveyEntity, Long> {
 
 }

@@ -8,7 +8,6 @@ import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/research")
@@ -35,7 +34,7 @@ public class ResearchController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ResearchEntity> getResearch(@PathVariable String id) {
+    public ApiResponse<ResearchEntity> getResearch(@PathVariable long id) {
         return new SuccessResponse<>(researchService.getResearchById(id));
     }
 
@@ -45,13 +44,13 @@ public class ResearchController {
     }
 
     @PutMapping(value = "/{id}", consumes = {"application/json"})
-    public ApiResponse<ResearchEntity> updateResearch(@RequestBody ResearchEntity research, @PathVariable String id) {
+    public ApiResponse<ResearchEntity> updateResearch(@RequestBody ResearchEntity research, @PathVariable long id) {
         research.setId(id);
         return new SuccessResponse<>(researchService.updateResearch(research));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Boolean> deleteResearch(@PathVariable String id) {
+    public ApiResponse<Boolean> deleteResearch(@PathVariable long id) {
         researchService.deleteResearchById(id);
         return new SuccessResponse<>(true);
     }

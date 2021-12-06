@@ -1,15 +1,22 @@
 package ru.afso.projectzero.entities;
 
-import org.springframework.data.mongodb.core.mapping.Document;
 import ru.afso.projectzero.models.AccountModel;
 
+import javax.persistence.*;
 import java.util.Date;
 
-@Document(collection = "accounts")
-public class AccountEntity extends BaseEntity implements ModelConvertable{
+@Entity
+@Table(name = "accounts")
+public class AccountEntity implements ModelConvertable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(unique = true)
     private String username;
 
+    @Column(nullable = false)
     private String passwordHash;
 
     private String firstName;
@@ -18,9 +25,19 @@ public class AccountEntity extends BaseEntity implements ModelConvertable{
 
     private String surname;
 
+    @Column(nullable = false)
     private Date createdAt;
 
+    @Column(nullable = false)
     private String role;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

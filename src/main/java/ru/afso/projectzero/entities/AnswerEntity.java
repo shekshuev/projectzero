@@ -2,8 +2,17 @@ package ru.afso.projectzero.entities;
 
 import ru.afso.projectzero.models.BaseModel;
 
-public class AnswerEntity extends BaseEntity implements ModelConvertable {
+import javax.persistence.*;
 
+@Entity
+@Table(name = "answers")
+public class AnswerEntity implements ModelConvertable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(nullable = false)
     private String text;
 
     private int code;
@@ -11,6 +20,18 @@ public class AnswerEntity extends BaseEntity implements ModelConvertable {
     private boolean selected;
 
     private String typedText;
+
+    @ManyToOne
+    @JoinColumn(name = "question_id", nullable = false)
+    private QuestionEntity question;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getText() {
         return text;

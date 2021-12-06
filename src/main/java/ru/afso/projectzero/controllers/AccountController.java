@@ -37,7 +37,7 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<AccountModel> getAccount(@PathVariable String id) {
+    public ApiResponse<AccountModel> getAccount(@PathVariable long id) {
         AccountEntity account = accountService.getAccountById(id);
         if (account != null) {
             return new SuccessResponse<>(account.toModel());
@@ -52,13 +52,13 @@ public class AccountController {
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
-    public ApiResponse<AccountModel> updateAccount(@RequestBody AccountEntity account, @PathVariable String id) {
+    public ApiResponse<AccountModel> updateAccount(@RequestBody AccountEntity account, @PathVariable long id) {
         account.setId(id);
         return new SuccessResponse<>(accountService.updateAccount(account).toModel());
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Boolean> deleteAccount(@PathVariable String id) {
+    public ApiResponse<Boolean> deleteAccount(@PathVariable long id) {
         accountService.deleteAccountById(id);
         return new SuccessResponse<>(true);
     }

@@ -7,6 +7,7 @@ import ru.afso.projectzero.repositories.ResearchRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ResearchService {
@@ -19,11 +20,11 @@ public class ResearchService {
     }
 
     public List<ResearchEntity> getResearches(int offset, int count) {
-        return researchRepository.findAll()
-                .stream().skip(offset).limit(count).collect(Collectors.toList());
+        return StreamSupport.stream(researchRepository.findAll().spliterator(), false)
+                .skip(offset).limit(count).collect(Collectors.toList());
     }
 
-    public ResearchEntity getResearchById(String id) {
+    public ResearchEntity getResearchById(long id) {
         return researchRepository.findById(id).orElse(null);
     }
 
@@ -36,7 +37,7 @@ public class ResearchService {
         return researchRepository.save(survey);
     }
 
-    public void deleteResearchById(String id) {
+    public void deleteResearchById(long id) {
         researchRepository.deleteById(id);
     }
 

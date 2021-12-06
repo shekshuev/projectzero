@@ -1,32 +1,48 @@
 package ru.afso.projectzero.entities;
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 import ru.afso.projectzero.models.BaseModel;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "surveys")
-public class SurveyEntity extends BaseEntity implements ModelConvertable {
+@Entity
+@Table(name = "surveys")
+public class SurveyEntity implements ModelConvertable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(nullable = false)
     private Date createdAt;
 
     private Date beginDate;
 
     private Date endDate;
 
+    @Column(nullable = false, unique = true)
     private String title;
 
     private String description;
 
+    @OneToMany(mappedBy = "survey")
     private List<QuestionEntity> questions;
 
-    @DBRef
+    @ManyToOne
+    @JoinColumn(name = "research_id", nullable = false)
     private ResearchEntity research;
 
     // Change to geojson or something else
     private Object position;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

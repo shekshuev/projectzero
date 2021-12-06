@@ -1,8 +1,8 @@
 package ru.afso.projectzero.repositories;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.CrudRepository;
 import ru.afso.projectzero.entities.AccountEntity;
 
-public interface AccountRepository extends MongoRepository<AccountEntity, String> {
+public interface AccountRepository extends CrudRepository<AccountEntity, Long> {
 
 }

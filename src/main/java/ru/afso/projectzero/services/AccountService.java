@@ -7,6 +7,7 @@ import ru.afso.projectzero.repositories.AccountRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class AccountService {
@@ -19,11 +20,11 @@ public class AccountService {
     }
 
     public List<AccountEntity> getAccounts(int offset, int count) {
-        return accountRepository.findAll()
-                .stream().skip(offset).limit(count).collect(Collectors.toList());
+        return StreamSupport.stream(accountRepository.findAll().spliterator(), false)
+                .skip(offset).limit(count).collect(Collectors.toList());
     }
 
-    public AccountEntity getAccountById(String id) {
+    public AccountEntity getAccountById(long id) {
         return accountRepository.findById(id).orElse(null);
     }
 
@@ -36,7 +37,7 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public void deleteAccountById(String id) {
+    public void deleteAccountById(long id) {
         accountRepository.deleteById(id);
     }
 

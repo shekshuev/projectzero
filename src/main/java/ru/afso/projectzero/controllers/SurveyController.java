@@ -36,7 +36,7 @@ public class SurveyController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<SurveyEntity> getSurvey(@PathVariable String id) {
+    public ApiResponse<SurveyEntity> getSurvey(@PathVariable long id) {
         SurveyEntity survey = surveyService.getSurveyById(id);
         if (survey != null) {
             return new SuccessResponse<>(survey);
@@ -51,13 +51,13 @@ public class SurveyController {
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
-    public ApiResponse<SurveyEntity> updateSurvey(@RequestBody SurveyEntity survey, @PathVariable String id) {
+    public ApiResponse<SurveyEntity> updateSurvey(@RequestBody SurveyEntity survey, @PathVariable long id) {
         survey.setId(id);
         return new SuccessResponse<>(surveyService.updateSurvey(survey));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Boolean> deleteSurvey(@PathVariable String id) {
+    public ApiResponse<Boolean> deleteSurvey(@PathVariable long id) {
         surveyService.deleteSurveyById(id);
         return new SuccessResponse<>(true);
     }
