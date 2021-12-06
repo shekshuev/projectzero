@@ -1,11 +1,13 @@
-package ru.afso.projectzero.models;
+package ru.afso.projectzero.entities;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import ru.afso.projectzero.models.BaseModel;
+
 import java.util.Date;
 import java.util.List;
 
 @Document(collection = "researches")
-public class Research extends BaseModel {
+public class ResearchEntity extends BaseEntity implements ModelConvertable {
 
     private Date createdAt;
 
@@ -17,7 +19,7 @@ public class Research extends BaseModel {
 
     private String description;
 
-    private List<SurveyModel> surveys;
+    private List<SurveyEntity> surveys;
 
     public Date getCreatedAt() {
         return createdAt;
@@ -59,11 +61,16 @@ public class Research extends BaseModel {
         this.description = description;
     }
 
-    public List<SurveyModel> getSurveys() {
+    public List<SurveyEntity> getSurveys() {
         return surveys;
     }
 
-    public void setSurveys(List<SurveyModel> surveys) {
+    public void setSurveys(List<SurveyEntity> surveys) {
         this.surveys = surveys;
+    }
+
+    @Override
+    public BaseModel toModel() {
+        return null;
     }
 }

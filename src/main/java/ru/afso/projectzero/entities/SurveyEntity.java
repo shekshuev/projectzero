@@ -3,7 +3,6 @@ package ru.afso.projectzero.entities;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ru.afso.projectzero.models.BaseModel;
-import ru.afso.projectzero.models.Research;
 
 import java.util.Date;
 import java.util.List;
@@ -24,7 +23,7 @@ public class SurveyEntity extends BaseEntity implements ModelConvertable {
     private List<QuestionEntity> questions;
 
     @DBRef
-    private Research research;
+    private ResearchEntity research;
 
     // Change to geojson or something else
     private Object position;
@@ -77,11 +76,11 @@ public class SurveyEntity extends BaseEntity implements ModelConvertable {
         this.questions = questions;
     }
 
-    public Research getResearch() {
+    public ResearchEntity getResearch() {
         return research;
     }
 
-    public void setResearch(Research research) {
+    public void setResearch(ResearchEntity research) {
         this.research = research;
     }
 

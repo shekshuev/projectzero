@@ -20,7 +20,7 @@ public class SurveyModel extends BaseModel {
     private List<QuestionModel> questions;
 
     @DBRef
-    private Research research;
+    private ResearchModel research;
 
     // Change to geojson or something else
     private Object position;
@@ -73,11 +73,11 @@ public class SurveyModel extends BaseModel {
         this.questions = questions;
     }
 
-    public Research getResearch() {
+    public ResearchModel getResearch() {
         return research;
     }
 
-    public void setResearch(Research research) {
+    public void setResearch(ResearchModel research) {
         this.research = research;
     }
 

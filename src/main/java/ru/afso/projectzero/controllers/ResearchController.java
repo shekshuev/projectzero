@@ -2,8 +2,8 @@ package ru.afso.projectzero.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.afso.projectzero.models.Research;
-import ru.afso.projectzero.repositories.ResearchRepository;
+import ru.afso.projectzero.entities.ResearchEntity;
+import ru.afso.projectzero.services.ResearchService;
 import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 import java.util.HashMap;
@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1.0/research")
 public class ResearchController {
 
-    private final ResearchRepository researchRepository;
+    private final ResearchService researchService;
 
     @Autowired
-    public ResearchController(ResearchRepository researchRepository) {
-        this.researchRepository = researchRepository;
+    public ResearchController(ResearchService researchService) {
+        this.researchService = researchService;
     }
 
     @GetMapping
@@ -29,33 +29,30 @@ public class ResearchController {
         int count = optionalCount.orElse(5);
         int offset = optionalOffset.orElse(0);
         HashMap<String, Object> map = new HashMap<>();
-        map.put("total", researchRepository.count());
-        map.put("researches", researchRepository.findAll()
-                .stream().skip(offset).limit(count).collect(Collectors.toList()));
+        map.put("total", researchService.getTotalResearchCount());
+        map.put("accounts", researchService.getResearches(offset, count));
         return new SuccessResponse<>(map);
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<Research> getResearch(@PathVariable String id) {
-        return new SuccessResponse<>(researchRepository.findById(id).orElse(null));
+    public ApiResponse<ResearchEntity> getResearch(@PathVariable String id) {
+        return new SuccessResponse<>(researchService.getResearchById(id));
     }
 
     @PostMapping(consumes = {"application/json"})
-    public ApiResponse<Research> createResearch(@RequestBody Research research) {
-        researchRepository.save(research);
-        return new SuccessResponse<>(research);
+    public ApiResponse<ResearchEntity> createResearch(@RequestBody ResearchEntity research) {
+        return new SuccessResponse<>(researchService.createResearch(research));
     }
 
     @PutMapping(value = "/{id}", consumes = {"application/json"})
-    public ApiResponse<Research> updateResearch(@RequestBody Research research, @PathVariable String id) {
+    public ApiResponse<ResearchEntity> updateResearch(@RequestBody ResearchEntity research, @PathVariable String id) {
         research.setId(id);
-        researchRepository.save(research);
-        return new SuccessResponse<>(research);
+        return new SuccessResponse<>(researchService.updateResearch(research));
     }
 
     @DeleteMapping("/{id}")
     public ApiResponse<Boolean> deleteResearch(@PathVariable String id) {
-        researchRepository.deleteById(id);
+        researchService.deleteResearchById(id);
         return new SuccessResponse<>(true);
     }
 
