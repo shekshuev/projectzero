@@ -8,7 +8,7 @@ public class QuestionModel extends BaseModel{
 
     private String type;
 
-    private List<AnswerModel> answers;
+    private List<? extends BaseModel> answers;
 
     private boolean required;
 
@@ -28,11 +28,11 @@ public class QuestionModel extends BaseModel{
         this.type = type;
     }
 
-    public List<AnswerModel> getAnswers() {
+    public List<? extends BaseModel> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<AnswerModel> answers) {
+    public void setAnswers(List<? extends BaseModel> answers) {
         this.answers = answers;
     }
 

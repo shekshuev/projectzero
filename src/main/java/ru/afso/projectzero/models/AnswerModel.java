@@ -6,10 +6,6 @@ public class AnswerModel extends BaseModel {
 
     private int code;
 
-    private boolean selected;
-
-    private String typedText;
-
     public String getText() {
         return text;
     }
@@ -26,19 +22,4 @@ public class AnswerModel extends BaseModel {
         this.code = code;
     }
 
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    public String getTypedText() {
-        return typedText;
-    }
-
-    public void setTypedText(String typedText) {
-        this.typedText = typedText;
-    }
 }

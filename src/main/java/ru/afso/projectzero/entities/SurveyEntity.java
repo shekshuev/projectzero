@@ -1,17 +1,19 @@
 package ru.afso.projectzero.entities;
 
 import ru.afso.projectzero.models.BaseModel;
+import ru.afso.projectzero.models.SurveyModel;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "surveys")
 public class SurveyEntity implements ModelConvertable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -26,11 +28,11 @@ public class SurveyEntity implements ModelConvertable {
 
     private String description;
 
-    @OneToMany(mappedBy = "survey")
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
     private List<QuestionEntity> questions;
 
     @ManyToOne
-    @JoinColumn(name = "research_id", nullable = false)
+    @JoinColumn(name = "research_id")
     private ResearchEntity research;
 
     // Change to geojson or something else
@@ -112,6 +114,15 @@ public class SurveyEntity implements ModelConvertable {
 
     @Override
     public BaseModel toModel() {
-        return null;
+        SurveyModel survey = new SurveyModel();
+        survey.setId(id);
+        survey.setBeginDate(beginDate);
+        survey.setEndDate(endDate);
+        survey.setTitle(title);
+        survey.setDescription(description);
+        if (questions != null) {
+            survey.setQuestions(questions.stream().map(QuestionEntity::toModel).collect(Collectors.toList()));
+        }
+        return survey;
     }
 }

@@ -11,6 +11,7 @@ import ru.afso.projectzero.utils.ErrorResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/research")
@@ -32,19 +33,19 @@ public class ResearchController {
         int offset = optionalOffset.orElse(0);
         HashMap<String, Object> map = new HashMap<>();
         map.put("total", researchService.getTotalResearchCount());
-        map.put("accounts", researchService.getResearches(offset, count));
+        map.put("researches", researchService.getResearches(offset, count).stream().map(ResearchEntity::toModel).collect(Collectors.toList()));
         return new SuccessResponse<>(map);
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ResearchEntity> getResearch(@PathVariable long id) {
-        return new SuccessResponse<>(researchService.getResearchById(id));
+    public ApiResponse<?> getResearch(@PathVariable long id) {
+        return new SuccessResponse<>(researchService.getResearchById(id).toModel());
     }
 
     @PostMapping(consumes = {"application/json"})
     public ApiResponse<?> createResearch(@RequestBody NewResearchModel newResearchModel) {
         try {
-            return new SuccessResponse<>(researchService.createResearch(newResearchModel.toEntity()));
+            return new SuccessResponse<>(researchService.createResearch(newResearchModel.toEntity()).toModel());
         } catch (DataAccessException e) {
             return new ErrorResponse<>(e.getMessage());
         }
@@ -55,7 +56,7 @@ public class ResearchController {
         ResearchEntity research = newResearchModel.toEntity();
         research.setId(id);
         try {
-            return new SuccessResponse<>(researchService.updateResearch(research));
+            return new SuccessResponse<>(researchService.updateResearch(research).toModel());
         } catch (DataAccessException e) {
             return new ErrorResponse<>(e.getMessage());
         }

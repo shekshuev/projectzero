@@ -1,17 +1,19 @@
 package ru.afso.projectzero.entities;
 
 import ru.afso.projectzero.models.BaseModel;
+import ru.afso.projectzero.models.ResearchModel;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "researches")
 public class ResearchEntity implements ModelConvertable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -89,6 +91,15 @@ public class ResearchEntity implements ModelConvertable {
 
     @Override
     public BaseModel toModel() {
-        return null;
+        ResearchModel research = new ResearchModel();
+        research.setId(id);
+        research.setBeginDate(beginDate);
+        research.setEndDate(endDate);
+        research.setTitle(title);
+        research.setDescription(description);
+        if (surveys != null) {
+            research.setSurveys(surveys.stream().map(SurveyEntity::toModel).collect(Collectors.toList()));
+        }
+        return research;
     }
 }

@@ -6,8 +6,6 @@ import java.util.List;
 
 public class ResearchModel extends BaseModel {
 
-    private Date createdAt;
-
     private Date beginDate;
 
     private Date endDate;
@@ -16,15 +14,7 @@ public class ResearchModel extends BaseModel {
 
     private String description;
 
-    private List<SurveyModel> surveys;
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+    private List<? extends BaseModel> surveys;
 
     public Date getBeginDate() {
         return beginDate;
@@ -58,11 +48,11 @@ public class ResearchModel extends BaseModel {
         this.description = description;
     }
 
-    public List<SurveyModel> getSurveys() {
+    public List<? extends BaseModel> getSurveys() {
         return surveys;
     }
 
-    public void setSurveys(List<SurveyModel> surveys) {
+    public void setSurveys(List<? extends BaseModel> surveys) {
         this.surveys = surveys;
     }
 }

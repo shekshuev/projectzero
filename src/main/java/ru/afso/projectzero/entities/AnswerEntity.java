@@ -1,5 +1,6 @@
 package ru.afso.projectzero.entities;
 
+import ru.afso.projectzero.models.AnswerModel;
 import ru.afso.projectzero.models.BaseModel;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 public class AnswerEntity implements ModelConvertable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -17,12 +18,8 @@ public class AnswerEntity implements ModelConvertable {
 
     private int code;
 
-    private boolean selected;
-
-    private String typedText;
-
     @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
+    @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
     public AnswerEntity() {}
@@ -51,22 +48,6 @@ public class AnswerEntity implements ModelConvertable {
         this.code = code;
     }
 
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    public String getTypedText() {
-        return typedText;
-    }
-
-    public void setTypedText(String typedText) {
-        this.typedText = typedText;
-    }
-
     public QuestionEntity getQuestion() {
         return question;
     }
@@ -77,6 +58,10 @@ public class AnswerEntity implements ModelConvertable {
 
     @Override
     public BaseModel toModel() {
-        return null;
+        AnswerModel answer = new AnswerModel();
+        answer.setId(id);
+        answer.setText(text);
+        answer.setCode(code);
+        return answer;
     }
 }

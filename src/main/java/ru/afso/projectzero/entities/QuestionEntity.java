@@ -1,16 +1,19 @@
 package ru.afso.projectzero.entities;
 
+import ru.afso.projectzero.models.AnswerModel;
 import ru.afso.projectzero.models.BaseModel;
+import ru.afso.projectzero.models.QuestionModel;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "questions")
 public class QuestionEntity implements ModelConvertable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -18,13 +21,13 @@ public class QuestionEntity implements ModelConvertable{
 
     private String type;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<AnswerEntity> answers;
 
     private boolean required;
 
     @ManyToOne
-    @JoinColumn(name = "survey_id", nullable = false)
+    @JoinColumn(name = "survey_id")
     private SurveyEntity survey;
 
     public QuestionEntity() {}
@@ -79,6 +82,14 @@ public class QuestionEntity implements ModelConvertable{
 
     @Override
     public BaseModel toModel() {
-        return null;
+        QuestionModel question = new QuestionModel();
+        question.setId(id);
+        question.setTitle(title);
+        question.setType(type);
+        question.setRequired(required);
+        if (answers != null) {
+            question.setAnswers(answers.stream().map(AnswerEntity::toModel).collect(Collectors.toList()));
+        }
+        return question;
     }
 }

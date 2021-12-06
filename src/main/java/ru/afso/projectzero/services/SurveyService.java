@@ -1,6 +1,7 @@
 package ru.afso.projectzero.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.afso.projectzero.entities.SurveyEntity;
 import ru.afso.projectzero.repositories.SurveyRepository;
@@ -34,7 +35,10 @@ public class SurveyService {
     }
 
     public SurveyEntity updateSurvey(SurveyEntity survey) {
-        return surveyRepository.save(survey);
+        //SurveyEntity old = getSurveyById(survey.getId());
+        //if (survey.)
+        //return surveyRepository.save(survey);
+        return survey;
     }
 
     public void deleteSurveyById(long id) {
