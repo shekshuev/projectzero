@@ -1,6 +1,6 @@
 package ru.afso.projectzero.models;
 
-public class Answer extends BaseModel {
+public class AnswerModel extends BaseModel {
 
     private String text;
 

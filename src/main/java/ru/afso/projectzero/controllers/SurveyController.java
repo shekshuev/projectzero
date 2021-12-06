@@ -2,24 +2,24 @@ package ru.afso.projectzero.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.afso.projectzero.models.Survey;
-import ru.afso.projectzero.repositories.SurveyRepository;
+import ru.afso.projectzero.entities.SurveyEntity;
+import ru.afso.projectzero.services.SurveyService;
 import ru.afso.projectzero.utils.ApiResponse;
+import ru.afso.projectzero.utils.ErrorResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/survey")
 public class SurveyController {
 
-    private final SurveyRepository surveyRepository;
+    private final SurveyService surveyService;
 
     @Autowired
-    public SurveyController(SurveyRepository surveyRepository) {
-        this.surveyRepository = surveyRepository;
+    public SurveyController(SurveyService surveyService) {
+        this.surveyService = surveyService;
     }
 
     @GetMapping
@@ -30,33 +30,35 @@ public class SurveyController {
         int count = optionalCount.orElse(5);
         int offset = optionalOffset.orElse(0);
         HashMap<String, Object> map = new HashMap<>();
-        map.put("total", surveyRepository.count());
-        map.put("surveys", surveyRepository.findAll()
-                .stream().skip(offset).limit(count).collect(Collectors.toList()));
+        map.put("total", surveyService.getTotalSurveysCount());
+        map.put("surveys", surveyService.getSurveys(offset, count));
         return new SuccessResponse<>(map);
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<Survey> getSurvey(@PathVariable String id) {
-        return new SuccessResponse<>(surveyRepository.findById(id).orElse(null));
+    public ApiResponse<SurveyEntity> getSurvey(@PathVariable String id) {
+        SurveyEntity survey = surveyService.getSurveyById(id);
+        if (survey != null) {
+            return new SuccessResponse<>(survey);
+        } else {
+            return new ErrorResponse<>(null);
+        }
     }
 
     @PostMapping(consumes = { "application/json" })
-    public ApiResponse<Survey> createSurvey(@RequestBody Survey survey) {
-        surveyRepository.save(survey);
-        return new SuccessResponse<>(survey);
+    public ApiResponse<SurveyEntity> createSurvey(@RequestBody SurveyEntity survey) {
+        return new SuccessResponse<>(surveyService.createSurvey(survey));
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
-    public ApiResponse<Survey> updateSurvey(@RequestBody Survey survey, @PathVariable String id) {
+    public ApiResponse<SurveyEntity> updateSurvey(@RequestBody SurveyEntity survey, @PathVariable String id) {
         survey.setId(id);
-        surveyRepository.save(survey);
-        return new SuccessResponse<>(survey);
+        return new SuccessResponse<>(surveyService.updateSurvey(survey));
     }
 
     @DeleteMapping("/{id}")
     public ApiResponse<Boolean> deleteSurvey(@PathVariable String id) {
-        surveyRepository.deleteById(id);
+        surveyService.deleteSurveyById(id);
         return new SuccessResponse<>(true);
     }
 }

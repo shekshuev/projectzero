@@ -1,12 +1,15 @@
-package ru.afso.projectzero.models;
+package ru.afso.projectzero.entities;
 
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import ru.afso.projectzero.models.BaseModel;
+import ru.afso.projectzero.models.Research;
+
 import java.util.Date;
 import java.util.List;
 
 @Document(collection = "surveys")
-public class Survey extends BaseModel {
+public class SurveyEntity extends BaseEntity implements ModelConvertable {
 
     private Date createdAt;
 
@@ -18,7 +21,7 @@ public class Survey extends BaseModel {
 
     private String description;
 
-    private List<Question> questions;
+    private List<QuestionEntity> questions;
 
     @DBRef
     private Research research;
@@ -66,11 +69,11 @@ public class Survey extends BaseModel {
         this.endDate = endDate;
     }
 
-    public List<Question> getQuestions() {
+    public List<QuestionEntity> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<Question> questions) {
+    public void setQuestions(List<QuestionEntity> questions) {
         this.questions = questions;
     }
 
@@ -88,5 +91,10 @@ public class Survey extends BaseModel {
 
     public void setPosition(Object position) {
         this.position = position;
+    }
+
+    @Override
+    public BaseModel toModel() {
+        return null;
     }
 }

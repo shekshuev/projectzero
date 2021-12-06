@@ -1,14 +1,16 @@
-package ru.afso.projectzero.models;
+package ru.afso.projectzero.entities;
+
+import ru.afso.projectzero.models.BaseModel;
 
 import java.util.List;
 
-public class Question extends BaseModel{
+public class QuestionEntity extends BaseEntity implements ModelConvertable{
 
     private String title;
 
     private String type;
 
-    private List<Answer> answers;
+    private List<AnswerEntity> answers;
 
     private boolean required;
 
@@ -28,11 +30,11 @@ public class Question extends BaseModel{
         this.type = type;
     }
 
-    public List<Answer> getAnswers() {
+    public List<AnswerEntity> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<Answer> answers) {
+    public void setAnswers(List<AnswerEntity> answers) {
         this.answers = answers;
     }
 
@@ -42,5 +44,10 @@ public class Question extends BaseModel{
 
     public void setRequired(boolean required) {
         this.required = required;
+    }
+
+    @Override
+    public BaseModel toModel() {
+        return null;
     }
 }

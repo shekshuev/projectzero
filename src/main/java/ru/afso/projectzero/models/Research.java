@@ -17,7 +17,7 @@ public class Research extends BaseModel {
 
     private String description;
 
-    private List<Survey> surveys;
+    private List<SurveyModel> surveys;
 
     public Date getCreatedAt() {
         return createdAt;
@@ -59,11 +59,11 @@ public class Research extends BaseModel {
         this.description = description;
     }
 
-    public List<Survey> getSurveys() {
+    public List<SurveyModel> getSurveys() {
         return surveys;
     }
 
-    public void setSurveys(List<Survey> surveys) {
+    public void setSurveys(List<SurveyModel> surveys) {
         this.surveys = surveys;
     }
 }
