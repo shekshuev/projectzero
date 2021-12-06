@@ -10,20 +10,20 @@ import java.util.Date;
 public class AccountEntity implements ModelConvertable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(unique = true)
-    private String username;
+    @Column(unique = true, nullable = false)
+    private String userName;
 
     @Column(nullable = false)
     private String passwordHash;
 
     private String firstName;
 
-    private String lastName;
+    private String middleName;
 
-    private String surname;
+    private String lastName;
 
     @Column(nullable = false)
     private Date createdAt;
@@ -31,16 +31,30 @@ public class AccountEntity implements ModelConvertable {
     @Column(nullable = false)
     private String role;
 
-    public long getId() {
+    public AccountEntity() {}
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getFirstName() {
@@ -51,12 +65,12 @@ public class AccountEntity implements ModelConvertable {
         this.firstName = firstName;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getMiddleName() {
+        return middleName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
     public String getLastName() {
@@ -86,12 +100,11 @@ public class AccountEntity implements ModelConvertable {
     @Override
     public AccountModel toModel() {
         AccountModel model = new AccountModel();
-        model.setId(this.getId());
-        model.setUsername(this.username);
+        model.setId(this.id);
+        model.setUserName(this.userName);
         model.setFirstName(this.firstName);
         model.setLastName(this.lastName);
-        model.setSurname(this.surname);
-        model.setCreatedAt(this.createdAt);
+        model.setMiddleName(this.middleName);
         model.setRole(this.role);
         return model;
     }

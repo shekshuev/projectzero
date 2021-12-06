@@ -1,6 +1,11 @@
 package ru.afso.projectzero.models;
 
-public class AccountModel extends BaseModel{
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ru.afso.projectzero.entities.AccountEntity;
+
+import java.util.Date;
+
+public class NewAccountModel {
 
     private String userName;
 
@@ -9,6 +14,8 @@ public class AccountModel extends BaseModel{
     private String middleName;
 
     private String lastName;
+
+    private String password;
 
     private String role;
 
@@ -44,11 +51,31 @@ public class AccountModel extends BaseModel{
         this.lastName = lastName;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getRole() {
         return role;
     }
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public AccountEntity toEntity() {
+        AccountEntity account = new AccountEntity();
+        account.setUserName(userName);
+        account.setFirstName(firstName);
+        account.setMiddleName(middleName);
+        account.setLastName(lastName);
+        account.setRole(role);
+        account.setPasswordHash(new BCryptPasswordEncoder().encode(password));
+        account.setCreatedAt(new Date());
+        return account;
     }
 }

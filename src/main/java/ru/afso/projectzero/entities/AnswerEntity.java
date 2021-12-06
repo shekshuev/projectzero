@@ -10,7 +10,7 @@ public class AnswerEntity implements ModelConvertable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String text;
@@ -25,11 +25,13 @@ public class AnswerEntity implements ModelConvertable {
     @JoinColumn(name = "question_id", nullable = false)
     private QuestionEntity question;
 
-    public long getId() {
+    public AnswerEntity() {}
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,6 +65,14 @@ public class AnswerEntity implements ModelConvertable {
 
     public void setTypedText(String typedText) {
         this.typedText = typedText;
+    }
+
+    public QuestionEntity getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(QuestionEntity question) {
+        this.question = question;
     }
 
     @Override

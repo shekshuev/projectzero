@@ -12,7 +12,7 @@ public class SurveyEntity implements ModelConvertable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private Date createdAt;
@@ -34,13 +34,15 @@ public class SurveyEntity implements ModelConvertable {
     private ResearchEntity research;
 
     // Change to geojson or something else
-    private Object position;
+    // private Object position;
 
-    public long getId() {
+    public SurveyEntity() {}
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -100,13 +102,13 @@ public class SurveyEntity implements ModelConvertable {
         this.research = research;
     }
 
-    public Object getPosition() {
-        return position;
-    }
-
-    public void setPosition(Object position) {
-        this.position = position;
-    }
+//    public Object getPosition() {
+//        return position;
+//    }
+//
+//    public void setPosition(Object position) {
+//        this.position = position;
+//    }
 
     @Override
     public BaseModel toModel() {

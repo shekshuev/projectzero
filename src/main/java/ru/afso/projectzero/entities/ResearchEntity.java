@@ -12,7 +12,7 @@ public class ResearchEntity implements ModelConvertable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private Date createdAt;
@@ -26,13 +26,16 @@ public class ResearchEntity implements ModelConvertable {
 
     private String description;
 
+    @OneToMany(mappedBy = "research")
     private List<SurveyEntity> surveys;
 
-    public long getId() {
+    public ResearchEntity() {}
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -76,7 +79,6 @@ public class ResearchEntity implements ModelConvertable {
         this.description = description;
     }
 
-    @OneToMany(mappedBy = "research")
     public List<SurveyEntity> getSurveys() {
         return surveys;
     }

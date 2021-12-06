@@ -29,8 +29,7 @@ public class AccountService {
     }
 
     public AccountEntity createAccount(AccountEntity account) {
-        accountRepository.save(account);
-        return account;
+        return accountRepository.save(account);
     }
 
     public AccountEntity updateAccount(AccountEntity account) {
