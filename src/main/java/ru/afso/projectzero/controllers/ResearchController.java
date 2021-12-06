@@ -1,10 +1,13 @@
 package ru.afso.projectzero.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.entities.ResearchEntity;
+import ru.afso.projectzero.models.NewResearchModel;
 import ru.afso.projectzero.services.ResearchService;
 import ru.afso.projectzero.utils.ApiResponse;
+import ru.afso.projectzero.utils.ErrorResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 import java.util.HashMap;
 import java.util.Optional;
@@ -39,20 +42,33 @@ public class ResearchController {
     }
 
     @PostMapping(consumes = {"application/json"})
-    public ApiResponse<ResearchEntity> createResearch(@RequestBody ResearchEntity research) {
-        return new SuccessResponse<>(researchService.createResearch(research));
+    public ApiResponse<?> createResearch(@RequestBody NewResearchModel newResearchModel) {
+        try {
+            return new SuccessResponse<>(researchService.createResearch(newResearchModel.toEntity()));
+        } catch (DataAccessException e) {
+            return new ErrorResponse<>(e.getMessage());
+        }
     }
 
     @PutMapping(value = "/{id}", consumes = {"application/json"})
-    public ApiResponse<ResearchEntity> updateResearch(@RequestBody ResearchEntity research, @PathVariable long id) {
+    public ApiResponse<?> updateResearch(@RequestBody NewResearchModel newResearchModel, @PathVariable long id) {
+        ResearchEntity research = newResearchModel.toEntity();
         research.setId(id);
-        return new SuccessResponse<>(researchService.updateResearch(research));
+        try {
+            return new SuccessResponse<>(researchService.updateResearch(research));
+        } catch (DataAccessException e) {
+            return new ErrorResponse<>(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Boolean> deleteResearch(@PathVariable long id) {
-        researchService.deleteResearchById(id);
-        return new SuccessResponse<>(true);
+    public ApiResponse<?> deleteResearch(@PathVariable long id) {
+        try {
+            researchService.deleteResearchById(id);
+            return new SuccessResponse<>(true);
+        } catch (DataAccessException e) {
+            return new ErrorResponse<>(e.getMessage());
+        }
     }
 
 }
