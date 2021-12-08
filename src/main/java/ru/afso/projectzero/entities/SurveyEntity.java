@@ -4,6 +4,7 @@ import ru.afso.projectzero.models.BaseModel;
 import ru.afso.projectzero.models.SurveyModel;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,6 +103,18 @@ public class SurveyEntity implements ModelConvertable {
 
     public void setResearch(ResearchEntity research) {
         this.research = research;
+    }
+
+    public void addQuestion(QuestionEntity question) {
+        if (questions == null) {
+            questions = new ArrayList<>();
+        }
+        questions.add(question);
+        if (question.getAnswers() != null) {
+            for (AnswerEntity answer: question.getAnswers()) {
+                answer.setQuestion(question);
+            }
+        }
     }
 
 //    public Object getPosition() {

@@ -3,10 +3,10 @@ package ru.afso.projectzero.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
-import ru.afso.projectzero.entities.ResearchEntity;
+import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
+import ru.afso.projectzero.models.NewQuestionModel;
 import ru.afso.projectzero.models.NewSurveyModel;
-import ru.afso.projectzero.models.SurveyModel;
 import ru.afso.projectzero.services.SurveyService;
 import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.ErrorResponse;
@@ -59,16 +59,39 @@ public class SurveyController {
         }
     }
 
-//    @PutMapping(value = "/{id}", consumes = { "application/json" })
-//    public ApiResponse<?> updateSurvey(@RequestBody NewSurveyModel newSurveyModel, @PathVariable long id) {
-//        SurveyEntity survey = newSurveyModel.toEntity();
-//        survey.setId(id);
-//        try {
-//            return new SuccessResponse<>(surveyService.updateSurvey(survey).toModel());
-//        } catch (DataAccessException e) {
-//            return new ErrorResponse<>(e.getMessage());
-//        }
-//    }
+    @PutMapping(value = "/{id}", consumes = { "application/json" })
+    public ApiResponse<?> updateSurvey(@RequestBody NewSurveyModel newSurveyModel, @PathVariable long id) {
+        SurveyEntity survey = surveyService.getSurveyById(id);
+        if (survey != null) {
+            try {
+                return new SuccessResponse<>(surveyService.updateSurvey(survey, newSurveyModel).toModel());
+            } catch (DataAccessException e) {
+                return new ErrorResponse<>(e.getMessage());
+            }
+        } else {
+            return new ErrorResponse<>("No such survey");
+        }
+    }
+
+    @PostMapping(value = "/{id}/question", consumes = { "application/json" })
+    public ApiResponse<?> addQuestionToSurvey(@RequestBody NewQuestionModel newQuestionModel, @PathVariable long id) {
+        SurveyEntity survey = surveyService.getSurveyById(id);
+        if (survey != null) {
+            try {
+                return new SuccessResponse<>(surveyService.addQuestion(survey, newQuestionModel.toEntity()).toModel());
+            } catch (DataAccessException e) {
+                return new ErrorResponse<>(e.getMessage());
+            }
+        } else {
+            return new ErrorResponse<>("No such survey");
+        }
+    }
+
+    @DeleteMapping(value = "/{surveyId}/question/{questionId}")
+    public ApiResponse<?> deleteQuestionFromSurvey(@PathVariable long surveyId, @PathVariable long questionId) {
+        surveyService.deleteQuestionById(questionId);
+        return new SuccessResponse<>(true);
+    }
 
     @DeleteMapping("/{id}")
     public ApiResponse<Boolean> deleteSurvey(@PathVariable long id) {
