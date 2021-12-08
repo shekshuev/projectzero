@@ -1,6 +1,7 @@
 package ru.afso.projectzero.entities;
 
 import ru.afso.projectzero.models.BaseModel;
+import ru.afso.projectzero.models.FilledSurveyModel;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,10 +28,10 @@ public class FilledSurveyEntity implements ModelConvertable {
     private Date endDate;
 
     @Column(nullable = false)
-    private boolean isCompleted;
+    private boolean completed;
 
     @ManyToOne
-    @JoinColumn(name = "survey_id", nullable = false)
+    @JoinColumn(name = "survey_id")
     private SurveyEntity survey;
 
     @OneToMany(mappedBy = "filledSurvey", cascade = CascadeType.ALL)
@@ -77,11 +78,11 @@ public class FilledSurveyEntity implements ModelConvertable {
     }
 
     public boolean isCompleted() {
-        return isCompleted;
+        return completed;
     }
 
     public void setCompleted(boolean completed) {
-        isCompleted = completed;
+        this.completed = completed;
     }
 
     public SurveyEntity getSurvey() {
@@ -92,8 +93,22 @@ public class FilledSurveyEntity implements ModelConvertable {
         this.survey = survey;
     }
 
+    public List<FilledQuestionEntity> getFilledQuestions() {
+        return filledQuestions;
+    }
+
+    public void setFilledQuestions(List<FilledQuestionEntity> filledQuestions) {
+        this.filledQuestions = filledQuestions;
+    }
+
     @Override
     public BaseModel toModel() {
-        return null;
+        FilledSurveyModel filledSurvey = new FilledSurveyModel();
+        filledSurvey.setId(id);
+        filledSurvey.setInstanceId(instanceId);
+        filledSurvey.setBeginDate(beginDate);
+        filledSurvey.setEndDate(endDate);
+        filledSurvey.setCompleted(completed);
+        return filledSurvey;
     }
 }

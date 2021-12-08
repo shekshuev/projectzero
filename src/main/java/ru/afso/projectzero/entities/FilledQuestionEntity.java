@@ -11,15 +11,15 @@ public class FilledQuestionEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "filled_survey_id", nullable = false)
+    @JoinColumn(name = "filled_survey_id")
     private FilledSurveyEntity filledSurvey;
 
     @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
+    @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
     @ManyToOne
-    @JoinColumn(name = "answer_id", nullable = false)
+    @JoinColumn(name = "answer_id")
     private AnswerEntity answer;
 
     @Column(nullable = false)
@@ -31,9 +31,7 @@ public class FilledQuestionEntity {
     @Column(nullable = false)
     private Date endDate;
 
-    private String typedText;
-
-    private boolean isSelected;
+    private String text;
 
     public Long getId() {
         return id;
@@ -91,19 +89,12 @@ public class FilledQuestionEntity {
         this.endDate = endDate;
     }
 
-    public String getTypedText() {
-        return typedText;
+    public String getText() {
+        return text;
     }
 
-    public void setTypedText(String typedText) {
-        this.typedText = typedText;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
 }

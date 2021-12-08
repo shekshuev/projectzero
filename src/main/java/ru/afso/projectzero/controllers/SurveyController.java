@@ -3,8 +3,11 @@ package ru.afso.projectzero.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
+import ru.afso.projectzero.entities.FilledSurveyEntity;
 import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
+import ru.afso.projectzero.models.FilledSurveyModel;
+import ru.afso.projectzero.models.NewFilledSurveyModel;
 import ru.afso.projectzero.models.NewQuestionModel;
 import ru.afso.projectzero.models.NewSurveyModel;
 import ru.afso.projectzero.services.SurveyService;
@@ -87,7 +90,7 @@ public class SurveyController {
         }
     }
 
-    @DeleteMapping(value = "/{surveyId}/question/{questionId}")
+    @DeleteMapping("/{surveyId}/question/{questionId}")
     public ApiResponse<?> deleteQuestionFromSurvey(@PathVariable long surveyId, @PathVariable long questionId) {
         surveyService.deleteQuestionById(questionId);
         return new SuccessResponse<>(true);
@@ -97,5 +100,37 @@ public class SurveyController {
     public ApiResponse<Boolean> deleteSurvey(@PathVariable long id) {
         surveyService.deleteSurveyById(id);
         return new SuccessResponse<>(true);
+    }
+
+    @GetMapping("/filled")
+    public ApiResponse<HashMap<String, Object>> getFilledSurveys(
+            @RequestParam(name="count") Optional<Integer> optionalCount,
+            @RequestParam(name="offset") Optional<Integer> optionalOffset
+    ) {
+        int count = optionalCount.orElse(5);
+        int offset = optionalOffset.orElse(0);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("total", surveyService.getTotalFilledSurveysCount());
+        map.put("filledSurveys", surveyService.getFilledSurveys(offset, count).stream().map(FilledSurveyEntity::toModel).collect(Collectors.toList()));
+        return new SuccessResponse<>(map);
+    }
+
+    @GetMapping("/filled/{id}")
+    public ApiResponse<?> getFilledSurvey(@PathVariable long id) {
+        FilledSurveyEntity survey = surveyService.getFilledSurveyById(id);
+        if (survey != null) {
+            return new SuccessResponse<>(survey.toModel());
+        } else {
+            return new ErrorResponse<>(null);
+        }
+    }
+
+    @PostMapping(value="/filled", consumes = { "application/json" })
+    public ApiResponse<?> createFilledSurvey(@RequestBody NewFilledSurveyModel newFilledSurveyModel) {
+        try {
+            return new SuccessResponse<>(surveyService.createFilledSurvey(newFilledSurveyModel.toEntity()).toModel());
+        } catch (DataAccessException e) {
+            return new ErrorResponse<>(e.getMessage());
+        }
     }
 }

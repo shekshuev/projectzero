@@ -2,9 +2,12 @@ package ru.afso.projectzero.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.afso.projectzero.entities.FilledQuestionEntity;
+import ru.afso.projectzero.entities.FilledSurveyEntity;
 import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
 import ru.afso.projectzero.models.NewSurveyModel;
+import ru.afso.projectzero.repositories.FilledSurveyRepository;
 import ru.afso.projectzero.repositories.QuestionRepository;
 import ru.afso.projectzero.repositories.SurveyRepository;
 
@@ -17,11 +20,15 @@ public class SurveyService {
 
     private final SurveyRepository surveyRepository;
     private final QuestionRepository questionRepository;
+    private final FilledSurveyRepository filledSurveyRepository;
 
     @Autowired
-    public SurveyService(SurveyRepository surveyRepository, QuestionRepository questionRepository) {
+    public SurveyService(SurveyRepository surveyRepository,
+                         QuestionRepository questionRepository,
+                         FilledSurveyRepository filledSurveyRepository) {
         this.surveyRepository = surveyRepository;
         this.questionRepository = questionRepository;
+        this.filledSurveyRepository = filledSurveyRepository;
     }
 
     public List<SurveyEntity> getSurveys(int offset, int count) {
@@ -54,6 +61,10 @@ public class SurveyService {
         return surveyRepository.count();
     }
 
+    public long getTotalFilledSurveysCount() {
+        return filledSurveyRepository.count();
+    }
+
     public SurveyEntity addQuestion(SurveyEntity survey, QuestionEntity question) {
         question.setSurvey(survey);
         survey.addQuestion(question);
@@ -62,5 +73,19 @@ public class SurveyService {
 
     public void deleteQuestionById(long questionId) {
         questionRepository.deleteById(questionId);
+    }
+
+    public List<FilledSurveyEntity> getFilledSurveys(int offset, int count) {
+        return StreamSupport.stream(filledSurveyRepository.findAll().spliterator(), false)
+                .skip(offset).limit(count).collect(Collectors.toList());
+    }
+
+    public FilledSurveyEntity getFilledSurveyById(long id) {
+        return filledSurveyRepository.findById(id).orElse(null);
+    }
+
+    public FilledSurveyEntity createFilledSurvey(FilledSurveyEntity filledSurvey) {
+        filledSurveyRepository.save(filledSurvey);
+        return filledSurvey;
     }
 }
