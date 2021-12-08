@@ -30,6 +30,9 @@ public class QuestionEntity implements ModelConvertable{
     @JoinColumn(name = "survey_id")
     private SurveyEntity survey;
 
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    public List<FilledQuestionEntity> filledQuestions;
+
     public QuestionEntity() {}
 
     public Long getId() {
@@ -78,6 +81,14 @@ public class QuestionEntity implements ModelConvertable{
 
     public void setSurvey(SurveyEntity survey) {
         this.survey = survey;
+    }
+
+    public List<FilledQuestionEntity> getFilledQuestions() {
+        return filledQuestions;
+    }
+
+    public void setFilledQuestions(List<FilledQuestionEntity> filledQuestions) {
+        this.filledQuestions = filledQuestions;
     }
 
     @Override

@@ -36,6 +36,9 @@ public class SurveyEntity implements ModelConvertable {
     @JoinColumn(name = "research_id")
     private ResearchEntity research;
 
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
+    private List<FilledSurveyEntity> filledSurveys;
+
     // Change to geojson or something else
     // private Object position;
 

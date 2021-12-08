@@ -4,6 +4,7 @@ import ru.afso.projectzero.models.AnswerModel;
 import ru.afso.projectzero.models.BaseModel;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "answers")
@@ -21,6 +22,9 @@ public class AnswerEntity implements ModelConvertable {
     @ManyToOne
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
+
+    @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
+    public List<FilledQuestionEntity> filledQuestions;
 
     public AnswerEntity() {}
 
