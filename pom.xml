@@ -51,16 +51,6 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-mongodb</artifactId>
-			<version>3.2.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongodb-driver-core</artifactId>
-			<version>4.0.4</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
@@ -69,17 +59,25 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mongodb</groupId>
-			<artifactId>mongodb-driver-sync</artifactId>
-			<version>4.0.4</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.geotools</groupId>
 			<artifactId>gt-geojson</artifactId>
 			<version>26-RC</version>
 		</dependency>
 	</dependencies>
-
-
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>15</source>
+					<target>15</target>
+				</configuration>
+            </plugin>
+        </plugins>
+	</build>
 </project>
