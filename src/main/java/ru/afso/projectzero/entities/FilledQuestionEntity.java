@@ -8,6 +8,7 @@ import java.util.Date;
 public class FilledQuestionEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
