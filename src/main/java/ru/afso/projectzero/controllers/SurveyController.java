@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.entities.FilledSurveyEntity;
-import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
-import ru.afso.projectzero.models.FilledSurveyModel;
 import ru.afso.projectzero.models.NewFilledSurveyModel;
 import ru.afso.projectzero.models.NewQuestionModel;
 import ru.afso.projectzero.models.NewSurveyModel;
@@ -15,6 +13,7 @@ import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.ErrorResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -126,11 +125,7 @@ public class SurveyController {
     }
 
     @PostMapping(value="/filled", consumes = { "application/json" })
-    public ApiResponse<?> createFilledSurvey(@RequestBody NewFilledSurveyModel newFilledSurveyModel) {
-        try {
-            return new SuccessResponse<>(surveyService.createFilledSurvey(newFilledSurveyModel.toEntity()).toModel());
-        } catch (DataAccessException e) {
-            return new ErrorResponse<>(e.getMessage());
-        }
+    public ApiResponse<?> createFilledSurvey(@Valid @RequestBody NewFilledSurveyModel newFilledSurveyModel) {
+        return new SuccessResponse<>(surveyService.createFilledSurvey(newFilledSurveyModel.toEntity()).toModel());
     }
 }

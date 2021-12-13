@@ -6,6 +6,10 @@ public class FilledSurveyModel extends BaseModel {
 
     private String instanceId;
 
+    private double latitude;
+
+    private double longitude;
+
     private Date beginDate;
 
     private Date endDate;
@@ -18,6 +22,22 @@ public class FilledSurveyModel extends BaseModel {
 
     public void setInstanceId(String instanceId) {
         this.instanceId = instanceId;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public Date getBeginDate() {

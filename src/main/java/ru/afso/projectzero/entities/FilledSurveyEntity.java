@@ -19,6 +19,12 @@ public class FilledSurveyEntity implements ModelConvertable {
     private String instanceId;
 
     @Column(nullable = false)
+    private double latitude;
+
+    @Column(nullable = false)
+    private double longitude;
+
+    @Column(nullable = false)
     private Date createdAt;
 
     @Column(nullable = false)
@@ -37,6 +43,8 @@ public class FilledSurveyEntity implements ModelConvertable {
     @OneToMany(mappedBy = "filledSurvey", cascade = CascadeType.ALL)
     private List<FilledQuestionEntity> filledQuestions;
 
+
+
     public Long getId() {
         return id;
     }
@@ -51,6 +59,22 @@ public class FilledSurveyEntity implements ModelConvertable {
 
     public void setInstanceId(String instanceId) {
         this.instanceId = instanceId;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public Date getCreatedAt() {
@@ -106,6 +130,8 @@ public class FilledSurveyEntity implements ModelConvertable {
         FilledSurveyModel filledSurvey = new FilledSurveyModel();
         filledSurvey.setId(id);
         filledSurvey.setInstanceId(instanceId);
+        filledSurvey.setLatitude(latitude);
+        filledSurvey.setLongitude(longitude);
         filledSurvey.setBeginDate(beginDate);
         filledSurvey.setEndDate(endDate);
         filledSurvey.setCompleted(completed);
