@@ -1,5 +1,6 @@
 package ru.afso.projectzero.entities;
 
+import ru.afso.projectzero.dto.ResearchDTO;
 import ru.afso.projectzero.models.BaseModel;
 import ru.afso.projectzero.models.ResearchModel;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 public class ResearchEntity implements ModelConvertable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -31,7 +32,19 @@ public class ResearchEntity implements ModelConvertable {
     @OneToMany(mappedBy = "research")
     private List<SurveyEntity> surveys;
 
+
+
     public ResearchEntity() {}
+
+    public ResearchEntity(ResearchDTO researchDTO) {
+        beginDate = researchDTO.getBeginDate();
+        endDate = researchDTO.getEndDate();
+        title = researchDTO.getTitle();
+        description = researchDTO.getDescription();
+        createdAt = new Date();
+    }
+
+
 
     public Long getId() {
         return id;

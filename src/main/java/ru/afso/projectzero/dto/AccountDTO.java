@@ -1,11 +1,6 @@
-package ru.afso.projectzero.models;
+package ru.afso.projectzero.dto;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.afso.projectzero.entities.AccountEntity;
-
-import java.util.Date;
-
-public class NewAccountModel {
+public class AccountDTO {
 
     private String userName;
 
@@ -18,6 +13,7 @@ public class NewAccountModel {
     private String password;
 
     private String role;
+
 
     public String getUserName() {
         return userName;
@@ -67,15 +63,4 @@ public class NewAccountModel {
         this.role = role;
     }
 
-    public AccountEntity toEntity() {
-        AccountEntity account = new AccountEntity();
-        account.setUserName(userName);
-        account.setFirstName(firstName);
-        account.setMiddleName(middleName);
-        account.setLastName(lastName);
-        account.setRole(role);
-        account.setPasswordHash(new BCryptPasswordEncoder().encode(password));
-        account.setCreatedAt(new Date());
-        return account;
-    }
 }

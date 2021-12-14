@@ -3,11 +3,12 @@ package ru.afso.projectzero.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
+import ru.afso.projectzero.dto.FilledSurveyDTO;
+import ru.afso.projectzero.dto.QuestionDTO;
+import ru.afso.projectzero.dto.SurveyDTO;
 import ru.afso.projectzero.entities.FilledSurveyEntity;
+import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
-import ru.afso.projectzero.models.NewFilledSurveyModel;
-import ru.afso.projectzero.models.NewQuestionModel;
-import ru.afso.projectzero.models.NewSurveyModel;
 import ru.afso.projectzero.services.SurveyService;
 import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.ErrorResponse;
@@ -53,20 +54,20 @@ public class SurveyController {
     }
 
     @PostMapping(consumes = { "application/json" })
-    public ApiResponse<?> createSurvey(@RequestBody NewSurveyModel newSurveyModel) {
+    public ApiResponse<?> createSurvey(@RequestBody SurveyDTO surveyDTO) {
         try {
-            return new SuccessResponse<>(surveyService.createSurvey(newSurveyModel.toEntity()).toModel());
+            return new SuccessResponse<>(surveyService.createSurvey(new SurveyEntity(surveyDTO)).toModel());
         } catch (DataAccessException e) {
             return new ErrorResponse<>(e.getMessage());
         }
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
-    public ApiResponse<?> updateSurvey(@RequestBody NewSurveyModel newSurveyModel, @PathVariable long id) {
+    public ApiResponse<?> updateSurvey(@RequestBody SurveyDTO surveyDTO, @PathVariable long id) {
         SurveyEntity survey = surveyService.getSurveyById(id);
         if (survey != null) {
             try {
-                return new SuccessResponse<>(surveyService.updateSurvey(survey, newSurveyModel).toModel());
+                return new SuccessResponse<>(surveyService.updateSurvey(survey, surveyDTO).toModel());
             } catch (DataAccessException e) {
                 return new ErrorResponse<>(e.getMessage());
             }
@@ -76,11 +77,11 @@ public class SurveyController {
     }
 
     @PostMapping(value = "/{id}/question", consumes = { "application/json" })
-    public ApiResponse<?> addQuestionToSurvey(@RequestBody NewQuestionModel newQuestionModel, @PathVariable long id) {
+    public ApiResponse<?> addQuestionToSurvey(@RequestBody QuestionDTO questionDTO, @PathVariable long id) {
         SurveyEntity survey = surveyService.getSurveyById(id);
         if (survey != null) {
             try {
-                return new SuccessResponse<>(surveyService.addQuestion(survey, newQuestionModel.toEntity()).toModel());
+                return new SuccessResponse<>(surveyService.addQuestion(survey, new QuestionEntity(questionDTO)).toModel());
             } catch (DataAccessException e) {
                 return new ErrorResponse<>(e.getMessage());
             }
@@ -125,7 +126,7 @@ public class SurveyController {
     }
 
     @PostMapping(value="/filled", consumes = { "application/json" })
-    public ApiResponse<?> createFilledSurvey(@Valid @RequestBody NewFilledSurveyModel newFilledSurveyModel) {
-        return new SuccessResponse<>(surveyService.createFilledSurvey(newFilledSurveyModel.toEntity()).toModel());
+    public ApiResponse<?> createFilledSurvey(@Valid @RequestBody FilledSurveyDTO filledSurveyDTO) {
+        return new SuccessResponse<>(surveyService.createFilledSurvey(new FilledSurveyEntity(filledSurveyDTO)).toModel());
     }
 }

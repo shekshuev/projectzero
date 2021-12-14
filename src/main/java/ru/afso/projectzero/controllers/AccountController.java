@@ -3,9 +3,9 @@ package ru.afso.projectzero.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
+import ru.afso.projectzero.dto.AccountDTO;
 import ru.afso.projectzero.entities.AccountEntity;
 import ru.afso.projectzero.models.AccountModel;
-import ru.afso.projectzero.models.NewAccountModel;
 import ru.afso.projectzero.services.AccountService;
 import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.ErrorResponse;
@@ -50,17 +50,17 @@ public class AccountController {
     }
 
     @PostMapping(consumes = { "application/json" })
-    public ApiResponse<?> createAccount(@RequestBody NewAccountModel newAccountModel) {
+    public ApiResponse<?> createAccount(@RequestBody AccountDTO accountDTO) {
         try {
-            return new SuccessResponse<>(accountService.createAccount(newAccountModel.toEntity()).toModel());
+            return new SuccessResponse<>(accountService.createAccount(new AccountEntity(accountDTO)).toModel());
         } catch (DataAccessException e) {
             return new ErrorResponse<>(e.getMessage());
         }
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
-    public ApiResponse<?> updateAccount(@RequestBody NewAccountModel newAccountModel, @PathVariable long id) {
-        AccountEntity account = newAccountModel.toEntity();
+    public ApiResponse<?> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable long id) {
+        AccountEntity account = new AccountEntity(accountDTO);
         account.setId(id);
         try {
             return new SuccessResponse<>(accountService.updateAccount(account).toModel());

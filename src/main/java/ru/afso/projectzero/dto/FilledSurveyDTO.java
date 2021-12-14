@@ -1,14 +1,11 @@
-package ru.afso.projectzero.models;
-
-import ru.afso.projectzero.entities.FilledSurveyEntity;
-import ru.afso.projectzero.entities.SurveyEntity;
+package ru.afso.projectzero.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
-public class NewFilledSurveyModel {
+public class FilledSurveyDTO {
 
     private Long id;
 
@@ -30,7 +27,7 @@ public class NewFilledSurveyModel {
     @NotNull(message = "Completed flag is required")
     private Boolean completed;
 
-    private List<NewFilledQuestionModel> questions;
+    private List<FilledQuestionDTO> questions;
 
 
 
@@ -90,33 +87,12 @@ public class NewFilledSurveyModel {
         this.completed = completed;
     }
 
-    public List<NewFilledQuestionModel> getQuestions() {
+    public List<FilledQuestionDTO> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<NewFilledQuestionModel> questions) {
+    public void setQuestions(List<FilledQuestionDTO> questions) {
         this.questions = questions;
     }
 
-    public FilledSurveyEntity toEntity() {
-        SurveyEntity survey = new SurveyEntity();
-        survey.setId(id);
-        FilledSurveyEntity filledSurvey = new FilledSurveyEntity();
-        filledSurvey.setSurvey(survey);
-        filledSurvey.setInstanceId(instanceId);
-        filledSurvey.setLatitude(latitude);
-        filledSurvey.setLongitude(longitude);
-        filledSurvey.setCreatedAt(new Date());
-        filledSurvey.setBeginDate(beginDate);
-        filledSurvey.setEndDate(endDate);
-        filledSurvey.setCompleted(completed);
-//        List<FilledQuestionEntity> filledQuestions = questions.stream()
-//                .map(NewFilledQuestionModel::toEntity)
-//                .collect(Collectors.toList());
-//        for (FilledQuestionEntity q: filledQuestions) {
-//            q.setFilledSurvey(filledSurvey);
-//        }
-//        filledSurvey.setFilledQuestions(filledQuestions);
-        return filledSurvey;
-    }
 }

@@ -1,6 +1,6 @@
 package ru.afso.projectzero.entities;
 
-import ru.afso.projectzero.models.AnswerModel;
+import ru.afso.projectzero.dto.QuestionDTO;
 import ru.afso.projectzero.models.BaseModel;
 import ru.afso.projectzero.models.QuestionModel;
 
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class QuestionEntity implements ModelConvertable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -33,7 +33,18 @@ public class QuestionEntity implements ModelConvertable{
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     public List<FilledQuestionEntity> filledQuestions;
 
+
+
     public QuestionEntity() {}
+
+    public QuestionEntity(QuestionDTO questionDTO) {
+        title = questionDTO.getTitle();
+        type = questionDTO.getType();
+        answers = questionDTO.getAnswers();
+        required = questionDTO.isRequired();
+    }
+
+
 
     public Long getId() {
         return id;

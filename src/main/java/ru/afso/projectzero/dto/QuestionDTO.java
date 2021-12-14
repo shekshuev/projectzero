@@ -1,11 +1,10 @@
-package ru.afso.projectzero.models;
+package ru.afso.projectzero.dto;
 
 import ru.afso.projectzero.entities.AnswerEntity;
-import ru.afso.projectzero.entities.QuestionEntity;
 
 import java.util.List;
 
-public class NewQuestionModel {
+public class QuestionDTO {
 
     private String title;
 
@@ -14,6 +13,7 @@ public class NewQuestionModel {
     private List<AnswerEntity> answers;
 
     private boolean required;
+
 
     public String getTitle() {
         return title;
@@ -45,14 +45,5 @@ public class NewQuestionModel {
 
     public void setRequired(boolean required) {
         this.required = required;
-    }
-
-    public QuestionEntity toEntity() {
-        QuestionEntity question = new QuestionEntity();
-        question.setTitle(title);
-        question.setType(type);
-        question.setAnswers(answers);
-        question.setRequired(required);
-        return question;
     }
 }

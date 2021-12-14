@@ -1,5 +1,6 @@
 package ru.afso.projectzero.entities;
 
+import ru.afso.projectzero.dto.SurveyDTO;
 import ru.afso.projectzero.models.BaseModel;
 import ru.afso.projectzero.models.SurveyModel;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class SurveyEntity implements ModelConvertable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -42,7 +43,31 @@ public class SurveyEntity implements ModelConvertable {
     // Change to geojson or something else
     // private Object position;
 
+
+
     public SurveyEntity() {}
+
+    public SurveyEntity(SurveyDTO surveyDTO) {
+        beginDate = surveyDTO.getBeginDate();
+        endDate = surveyDTO.getEndDate();
+        title = surveyDTO.getTitle();
+        description = surveyDTO.getDescription();
+        if (surveyDTO.getQuestions() != null) {
+            questions = surveyDTO.getQuestions();
+            for (QuestionEntity question : questions) {
+                question.setSurvey(this);
+                if (question.getAnswers() != null) {
+                    for (AnswerEntity answer: question.getAnswers()) {
+                        answer.setQuestion(question);
+                    }
+                }
+            }
+        }
+        research = surveyDTO.getResearch();
+        createdAt = new Date();
+    }
+
+
 
     public Long getId() {
         return id;

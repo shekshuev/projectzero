@@ -2,11 +2,10 @@ package ru.afso.projectzero.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.afso.projectzero.entities.FilledQuestionEntity;
+import ru.afso.projectzero.dto.SurveyDTO;
 import ru.afso.projectzero.entities.FilledSurveyEntity;
 import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
-import ru.afso.projectzero.models.NewSurveyModel;
 import ru.afso.projectzero.repositories.FilledSurveyRepository;
 import ru.afso.projectzero.repositories.QuestionRepository;
 import ru.afso.projectzero.repositories.SurveyRepository;
@@ -45,11 +44,11 @@ public class SurveyService {
         return survey;
     }
 
-    public SurveyEntity updateSurvey(SurveyEntity survey, NewSurveyModel newSurveyModel) {
-        survey.setTitle(newSurveyModel.getTitle());
-        survey.setDescription(newSurveyModel.getDescription());
-        survey.setBeginDate(newSurveyModel.getBeginDate());
-        survey.setEndDate(newSurveyModel.getEndDate());
+    public SurveyEntity updateSurvey(SurveyEntity survey, SurveyDTO surveyDTO) {
+        survey.setTitle(surveyDTO.getTitle());
+        survey.setDescription(surveyDTO.getDescription());
+        survey.setBeginDate(surveyDTO.getBeginDate());
+        survey.setEndDate(surveyDTO.getEndDate());
         return surveyRepository.save(survey);
     }
 

@@ -1,5 +1,7 @@
 package ru.afso.projectzero.entities;
 
+import ru.afso.projectzero.dto.FilledQuestionDTO;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -8,7 +10,7 @@ import java.util.Date;
 public class FilledQuestionEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -33,6 +35,25 @@ public class FilledQuestionEntity {
     private Date endDate;
 
     private String text;
+
+
+
+    public FilledQuestionEntity() {}
+
+    public FilledQuestionEntity(FilledQuestionDTO filledQuestionDTO) {
+        QuestionEntity question = new QuestionEntity();
+        question.setId(filledQuestionDTO.getId());
+        AnswerEntity answer = new AnswerEntity();
+        answer.setId(filledQuestionDTO.getAnswerId());
+        this.question = question;
+        this.answer = answer;
+        createdAt = new Date();
+        beginDate = filledQuestionDTO.getBeginDate();
+        endDate = filledQuestionDTO.getEndDate();
+        text = filledQuestionDTO.getText();
+    }
+
+
 
     public Long getId() {
         return id;

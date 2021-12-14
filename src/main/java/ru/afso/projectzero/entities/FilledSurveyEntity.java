@@ -1,18 +1,20 @@
 package ru.afso.projectzero.entities;
 
+import ru.afso.projectzero.dto.FilledSurveyDTO;
 import ru.afso.projectzero.models.BaseModel;
 import ru.afso.projectzero.models.FilledSurveyModel;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "filled_surveys")
 public class FilledSurveyEntity implements ModelConvertable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -42,6 +44,30 @@ public class FilledSurveyEntity implements ModelConvertable {
 
     @OneToMany(mappedBy = "filledSurvey", cascade = CascadeType.ALL)
     private List<FilledQuestionEntity> filledQuestions;
+
+
+
+    public FilledSurveyEntity() {}
+
+    public FilledSurveyEntity(FilledSurveyDTO filledSurveyDTO) {
+        SurveyEntity survey = new SurveyEntity();
+        survey.setId(filledSurveyDTO.getId());
+        this.survey = survey;
+        instanceId = filledSurveyDTO.getInstanceId();
+        latitude = filledSurveyDTO.getLatitude();
+        longitude = filledSurveyDTO.getLongitude();
+        createdAt = new Date();
+        beginDate = filledSurveyDTO.getBeginDate();
+        endDate = filledSurveyDTO.getEndDate();
+        completed = filledSurveyDTO.getCompleted();
+        List<FilledQuestionEntity> filledQuestions = filledSurveyDTO.getQuestions().stream()
+                .map(FilledQuestionEntity::new)
+                .collect(Collectors.toList());
+        for (FilledQuestionEntity q: filledQuestions) {
+            q.setFilledSurvey(this);
+        }
+        this.filledQuestions = filledQuestions;
+    }
 
 
 

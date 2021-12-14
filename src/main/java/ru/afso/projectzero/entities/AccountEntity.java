@@ -1,5 +1,7 @@
 package ru.afso.projectzero.entities;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ru.afso.projectzero.dto.AccountDTO;
 import ru.afso.projectzero.models.AccountModel;
 
 import javax.persistence.*;
@@ -10,7 +12,7 @@ import java.util.Date;
 public class AccountEntity implements ModelConvertable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -31,7 +33,20 @@ public class AccountEntity implements ModelConvertable {
     @Column(nullable = false)
     private String role;
 
+
+
     public AccountEntity() {}
+
+    public AccountEntity(AccountDTO accountDTO) {
+        userName = accountDTO.getUserName();
+        firstName = accountDTO.getFirstName();
+        middleName = accountDTO.getMiddleName();
+        lastName = accountDTO.getLastName();
+        role = accountDTO.getRole();
+        passwordHash = new BCryptPasswordEncoder().encode(accountDTO.getPassword());
+        createdAt = new Date();
+    }
+
 
     public Long getId() {
         return id;
@@ -96,6 +111,8 @@ public class AccountEntity implements ModelConvertable {
     public void setRole(String role) {
         this.role = role;
     }
+
+
 
     @Override
     public AccountModel toModel() {

@@ -3,8 +3,8 @@ package ru.afso.projectzero.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
+import ru.afso.projectzero.dto.ResearchDTO;
 import ru.afso.projectzero.entities.ResearchEntity;
-import ru.afso.projectzero.models.NewResearchModel;
 import ru.afso.projectzero.services.ResearchService;
 import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.ErrorResponse;
@@ -43,17 +43,17 @@ public class ResearchController {
     }
 
     @PostMapping(consumes = {"application/json"})
-    public ApiResponse<?> createResearch(@RequestBody NewResearchModel newResearchModel) {
+    public ApiResponse<?> createResearch(@RequestBody ResearchDTO researchDTO) {
         try {
-            return new SuccessResponse<>(researchService.createResearch(newResearchModel.toEntity()).toModel());
+            return new SuccessResponse<>(researchService.createResearch(new ResearchEntity(researchDTO)).toModel());
         } catch (DataAccessException e) {
             return new ErrorResponse<>(e.getMessage());
         }
     }
 
     @PutMapping(value = "/{id}", consumes = {"application/json"})
-    public ApiResponse<?> updateResearch(@RequestBody NewResearchModel newResearchModel, @PathVariable long id) {
-        ResearchEntity research = newResearchModel.toEntity();
+    public ApiResponse<?> updateResearch(@RequestBody ResearchDTO researchDTO, @PathVariable long id) {
+        ResearchEntity research = new ResearchEntity(researchDTO);
         research.setId(id);
         try {
             return new SuccessResponse<>(researchService.updateResearch(research).toModel());
