@@ -44,32 +44,20 @@ public class ResearchController {
 
     @PostMapping(consumes = {"application/json"})
     public ApiResponse<?> createResearch(@RequestBody ResearchDTO researchDTO) {
-        try {
-            return new SuccessResponse<>(researchService.createResearch(new ResearchEntity(researchDTO)).toModel());
-        } catch (DataAccessException e) {
-            return new ErrorResponse<>(e.getMessage());
-        }
+        return new SuccessResponse<>(researchService.createResearch(new ResearchEntity(researchDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = {"application/json"})
     public ApiResponse<?> updateResearch(@RequestBody ResearchDTO researchDTO, @PathVariable long id) {
         ResearchEntity research = new ResearchEntity(researchDTO);
         research.setId(id);
-        try {
-            return new SuccessResponse<>(researchService.updateResearch(research).toModel());
-        } catch (DataAccessException e) {
-            return new ErrorResponse<>(e.getMessage());
-        }
+        return new SuccessResponse<>(researchService.updateResearch(research).toModel());
     }
 
     @DeleteMapping("/{id}")
     public ApiResponse<?> deleteResearch(@PathVariable long id) {
-        try {
-            researchService.deleteResearchById(id);
-            return new SuccessResponse<>(true);
-        } catch (DataAccessException e) {
-            return new ErrorResponse<>(e.getMessage());
-        }
+        researchService.deleteResearchById(id);
+        return new SuccessResponse<>(true);
     }
 
 }

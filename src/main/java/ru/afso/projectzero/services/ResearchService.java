@@ -29,8 +29,7 @@ public class ResearchService {
     }
 
     public ResearchEntity createResearch(ResearchEntity survey) {
-        researchRepository.save(survey);
-        return survey;
+        return researchRepository.save(survey);
     }
 
     public ResearchEntity updateResearch(ResearchEntity survey) {

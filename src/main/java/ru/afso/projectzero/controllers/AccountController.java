@@ -1,14 +1,12 @@
 package ru.afso.projectzero.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.AccountDTO;
 import ru.afso.projectzero.entities.AccountEntity;
 import ru.afso.projectzero.models.AccountModel;
 import ru.afso.projectzero.services.AccountService;
 import ru.afso.projectzero.utils.ApiResponse;
-import ru.afso.projectzero.utils.ErrorResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 
 import java.util.HashMap;
@@ -41,42 +39,25 @@ public class AccountController {
 
     @GetMapping("/{id}")
     public ApiResponse<AccountModel> getAccount(@PathVariable long id) {
-        AccountEntity account = accountService.getAccountById(id);
-        if (account != null) {
-            return new SuccessResponse<>(account.toModel());
-        } else {
-            return new ErrorResponse<>(null);
-        }
+        return new SuccessResponse<>(accountService.getAccountById(id).toModel());
     }
 
     @PostMapping(consumes = { "application/json" })
     public ApiResponse<?> createAccount(@RequestBody AccountDTO accountDTO) {
-        try {
-            return new SuccessResponse<>(accountService.createAccount(new AccountEntity(accountDTO)).toModel());
-        } catch (DataAccessException e) {
-            return new ErrorResponse<>(e.getMessage());
-        }
+        return new SuccessResponse<>(accountService.createAccount(new AccountEntity(accountDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
     public ApiResponse<?> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable long id) {
         AccountEntity account = new AccountEntity(accountDTO);
         account.setId(id);
-        try {
-            return new SuccessResponse<>(accountService.updateAccount(account).toModel());
-        } catch (DataAccessException e) {
-            return new ErrorResponse<>(e.getMessage());
-        }
+        return new SuccessResponse<>(accountService.updateAccount(account).toModel());
     }
 
     @DeleteMapping("/{id}")
     public ApiResponse<?> deleteAccount(@PathVariable long id) {
-        try {
-            accountService.deleteAccountById(id);
-            return new SuccessResponse<>(true);
-        } catch (DataAccessException e) {
-            return new ErrorResponse<>(e.getMessage());
-        }
+        accountService.deleteAccountById(id);
+        return new SuccessResponse<>(true);
     }
 
 }

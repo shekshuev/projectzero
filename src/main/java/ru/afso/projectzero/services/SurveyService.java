@@ -36,7 +36,7 @@ public class SurveyService {
     }
 
     public SurveyEntity getSurveyById(long id) {
-        return surveyRepository.findById(id).orElse(null);
+        return surveyRepository.findById(id).orElseThrow();
     }
 
     public SurveyEntity createSurvey(SurveyEntity survey) {
@@ -80,7 +80,7 @@ public class SurveyService {
     }
 
     public FilledSurveyEntity getFilledSurveyById(long id) {
-        return filledSurveyRepository.findById(id).orElse(null);
+        return filledSurveyRepository.findById(id).orElseThrow();
     }
 
     public FilledSurveyEntity createFilledSurvey(FilledSurveyEntity filledSurvey) {

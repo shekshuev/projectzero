@@ -1,7 +1,6 @@
 package ru.afso.projectzero.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.FilledSurveyDTO;
 import ru.afso.projectzero.dto.QuestionDTO;
@@ -11,7 +10,6 @@ import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
 import ru.afso.projectzero.services.SurveyService;
 import ru.afso.projectzero.utils.ApiResponse;
-import ru.afso.projectzero.utils.ErrorResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 
 import javax.validation.Valid;
@@ -45,53 +43,28 @@ public class SurveyController {
 
     @GetMapping("/{id}")
     public ApiResponse<?> getSurvey(@PathVariable long id) {
-        SurveyEntity survey = surveyService.getSurveyById(id);
-        if (survey != null) {
-            return new SuccessResponse<>(survey.toModel());
-        } else {
-            return new ErrorResponse<>(null);
-        }
+        return new SuccessResponse<>(surveyService.getSurveyById(id).toModel());
     }
 
     @PostMapping(consumes = { "application/json" })
     public ApiResponse<?> createSurvey(@RequestBody SurveyDTO surveyDTO) {
-        try {
-            return new SuccessResponse<>(surveyService.createSurvey(new SurveyEntity(surveyDTO)).toModel());
-        } catch (DataAccessException e) {
-            return new ErrorResponse<>(e.getMessage());
-        }
+        return new SuccessResponse<>(surveyService.createSurvey(new SurveyEntity(surveyDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
     public ApiResponse<?> updateSurvey(@RequestBody SurveyDTO surveyDTO, @PathVariable long id) {
-        SurveyEntity survey = surveyService.getSurveyById(id);
-        if (survey != null) {
-            try {
-                return new SuccessResponse<>(surveyService.updateSurvey(survey, surveyDTO).toModel());
-            } catch (DataAccessException e) {
-                return new ErrorResponse<>(e.getMessage());
-            }
-        } else {
-            return new ErrorResponse<>("No such survey");
-        }
+        return new SuccessResponse<>(surveyService.updateSurvey(
+                surveyService.getSurveyById(id), surveyDTO).toModel());
     }
 
     @PostMapping(value = "/{id}/question", consumes = { "application/json" })
     public ApiResponse<?> addQuestionToSurvey(@RequestBody QuestionDTO questionDTO, @PathVariable long id) {
-        SurveyEntity survey = surveyService.getSurveyById(id);
-        if (survey != null) {
-            try {
-                return new SuccessResponse<>(surveyService.addQuestion(survey, new QuestionEntity(questionDTO)).toModel());
-            } catch (DataAccessException e) {
-                return new ErrorResponse<>(e.getMessage());
-            }
-        } else {
-            return new ErrorResponse<>("No such survey");
-        }
+        return new SuccessResponse<>(surveyService.addQuestion(
+                surveyService.getSurveyById(id), new QuestionEntity(questionDTO)).toModel());
     }
 
-    @DeleteMapping("/{surveyId}/question/{questionId}")
-    public ApiResponse<?> deleteQuestionFromSurvey(@PathVariable long surveyId, @PathVariable long questionId) {
+    @DeleteMapping("/question/{questionId}")
+    public ApiResponse<?> deleteQuestionFromSurvey(@PathVariable long questionId) {
         surveyService.deleteQuestionById(questionId);
         return new SuccessResponse<>(true);
     }
@@ -117,12 +90,7 @@ public class SurveyController {
 
     @GetMapping("/filled/{id}")
     public ApiResponse<?> getFilledSurvey(@PathVariable long id) {
-        FilledSurveyEntity survey = surveyService.getFilledSurveyById(id);
-        if (survey != null) {
-            return new SuccessResponse<>(survey.toModel());
-        } else {
-            return new ErrorResponse<>(null);
-        }
+        return new SuccessResponse<>(surveyService.getFilledSurveyById(id).toModel());
     }
 
     @PostMapping(value="/filled", consumes = { "application/json" })
