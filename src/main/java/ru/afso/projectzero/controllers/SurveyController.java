@@ -1,6 +1,7 @@
 package ru.afso.projectzero.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.FilledSurveyDTO;
 import ru.afso.projectzero.dto.QuestionDTO;
@@ -47,35 +48,41 @@ public class SurveyController {
     }
 
     @PostMapping(consumes = { "application/json" })
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> createSurvey(@RequestBody SurveyDTO surveyDTO) {
         return new SuccessResponse<>(surveyService.createSurvey(new SurveyEntity(surveyDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> updateSurvey(@RequestBody SurveyDTO surveyDTO, @PathVariable long id) {
         return new SuccessResponse<>(surveyService.updateSurvey(
                 surveyService.getSurveyById(id), surveyDTO).toModel());
     }
 
     @PostMapping(value = "/{id}/question", consumes = { "application/json" })
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> addQuestionToSurvey(@RequestBody QuestionDTO questionDTO, @PathVariable long id) {
         return new SuccessResponse<>(surveyService.addQuestion(
                 surveyService.getSurveyById(id), new QuestionEntity(questionDTO)).toModel());
     }
 
     @DeleteMapping("/question/{questionId}")
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> deleteQuestionFromSurvey(@PathVariable long questionId) {
         surveyService.deleteQuestionById(questionId);
         return new SuccessResponse<>(true);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<Boolean> deleteSurvey(@PathVariable long id) {
         surveyService.deleteSurveyById(id);
         return new SuccessResponse<>(true);
     }
 
     @GetMapping("/filled")
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<HashMap<String, Object>> getFilledSurveys(
             @RequestParam(name="count") Optional<Integer> optionalCount,
             @RequestParam(name="offset") Optional<Integer> optionalOffset
@@ -89,6 +96,7 @@ public class SurveyController {
     }
 
     @GetMapping("/filled/{id}")
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> getFilledSurvey(@PathVariable long id) {
         return new SuccessResponse<>(surveyService.getFilledSurveyById(id).toModel());
     }

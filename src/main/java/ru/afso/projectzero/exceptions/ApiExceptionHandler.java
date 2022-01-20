@@ -1,5 +1,6 @@
 package ru.afso.projectzero.exceptions;
 
+import io.jsonwebtoken.JwtException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -18,6 +19,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.ErrorResponse;
 
+import javax.security.auth.message.AuthException;
+import org.springframework.security.access.AccessDeniedException;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -32,6 +35,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({EmptyResultDataAccessException.class, NoSuchElementException.class})
     public ApiResponse<String> handleEmptyResultDataAccessException() {
         return new ErrorResponse<>("No entity with such id!");
+    }
+
+    @ExceptionHandler({AuthException.class, AccessDeniedException.class, JwtException.class})
+    public ResponseEntity<? extends ApiResponse> handleAuthException(Exception e) {
+        return new ResponseEntity<>(new ErrorResponse<>(e.getMessage()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

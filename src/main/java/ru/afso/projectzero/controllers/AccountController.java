@@ -1,6 +1,7 @@
 package ru.afso.projectzero.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.AccountDTO;
 import ru.afso.projectzero.entities.AccountEntity;
@@ -38,16 +39,19 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<AccountModel> getAccount(@PathVariable long id) {
         return new SuccessResponse<>(accountService.getAccountById(id).toModel());
     }
 
     @PostMapping(consumes = { "application/json" })
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> createAccount(@RequestBody AccountDTO accountDTO) {
         return new SuccessResponse<>(accountService.createAccount(new AccountEntity(accountDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable long id) {
         AccountEntity account = new AccountEntity(accountDTO);
         account.setId(id);
@@ -55,6 +59,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> deleteAccount(@PathVariable long id) {
         accountService.deleteAccountById(id);
         return new SuccessResponse<>(true);

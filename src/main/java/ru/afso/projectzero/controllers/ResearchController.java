@@ -1,13 +1,12 @@
 package ru.afso.projectzero.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.ResearchDTO;
 import ru.afso.projectzero.entities.ResearchEntity;
 import ru.afso.projectzero.services.ResearchService;
 import ru.afso.projectzero.utils.ApiResponse;
-import ru.afso.projectzero.utils.ErrorResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 import java.util.HashMap;
 import java.util.Optional;
@@ -43,11 +42,13 @@ public class ResearchController {
     }
 
     @PostMapping(consumes = {"application/json"})
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> createResearch(@RequestBody ResearchDTO researchDTO) {
         return new SuccessResponse<>(researchService.createResearch(new ResearchEntity(researchDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = {"application/json"})
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> updateResearch(@RequestBody ResearchDTO researchDTO, @PathVariable long id) {
         ResearchEntity research = new ResearchEntity(researchDTO);
         research.setId(id);
@@ -55,6 +56,7 @@ public class ResearchController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<?> deleteResearch(@PathVariable long id) {
         researchService.deleteResearchById(id);
         return new SuccessResponse<>(true);
