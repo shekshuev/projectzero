@@ -1,13 +1,18 @@
 package ru.afso.projectzero.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class ResearchDTO {
 
+    @NotNull(message = "Begin date is required")
     private Date beginDate;
 
+    @NotNull(message = "End date is required")
     private Date endDate;
 
+    @NotBlank(message = "Title is required")
     private String title;
 
     private String description;

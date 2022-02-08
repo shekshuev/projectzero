@@ -13,6 +13,7 @@ import ru.afso.projectzero.services.AccountService;
 import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,13 +72,13 @@ public class AccountController {
 
     @PostMapping(consumes = { "application/json" })
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> createAccount(@RequestBody AccountDTO accountDTO) {
+    public ApiResponse<?> createAccount(@Valid @RequestBody AccountDTO accountDTO) {
         return new SuccessResponse<>(accountService.createAccount(new AccountEntity(accountDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable long id) {
+    public ApiResponse<?> updateAccount(@Valid @RequestBody AccountDTO accountDTO, @PathVariable long id) {
         AccountEntity account = new AccountEntity(accountDTO);
         account.setId(id);
         return new SuccessResponse<>(accountService.updateAccount(account).toModel());

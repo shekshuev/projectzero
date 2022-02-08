@@ -8,6 +8,8 @@ import ru.afso.projectzero.entities.ResearchEntity;
 import ru.afso.projectzero.services.ResearchService;
 import ru.afso.projectzero.utils.ApiResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
+
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,7 +34,8 @@ public class ResearchController {
         int offset = optionalOffset.orElse(0);
         HashMap<String, Object> map = new HashMap<>();
         map.put("total", researchService.getTotalResearchCount());
-        map.put("researches", researchService.getResearches(offset, count).stream().map(ResearchEntity::toModel).collect(Collectors.toList()));
+        map.put("researches", researchService.getResearches(offset, count).stream()
+                .map(ResearchEntity::toModel).collect(Collectors.toList()));
         return new SuccessResponse<>(map);
     }
 
@@ -43,13 +46,13 @@ public class ResearchController {
 
     @PostMapping(consumes = {"application/json"})
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> createResearch(@RequestBody ResearchDTO researchDTO) {
+    public ApiResponse<?> createResearch(@Valid @RequestBody ResearchDTO researchDTO) {
         return new SuccessResponse<>(researchService.createResearch(new ResearchEntity(researchDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = {"application/json"})
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> updateResearch(@RequestBody ResearchDTO researchDTO, @PathVariable long id) {
+    public ApiResponse<?> updateResearch(@Valid @RequestBody ResearchDTO researchDTO, @PathVariable long id) {
         ResearchEntity research = new ResearchEntity(researchDTO);
         research.setId(id);
         return new SuccessResponse<>(researchService.updateResearch(research).toModel());

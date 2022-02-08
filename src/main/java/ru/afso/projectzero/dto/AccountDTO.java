@@ -1,7 +1,10 @@
 package ru.afso.projectzero.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class AccountDTO {
 
+    @NotBlank(message = "Username is required")
     private String userName;
 
     private String firstName;
@@ -10,8 +13,10 @@ public class AccountDTO {
 
     private String lastName;
 
+    @NotBlank(message = "Password is required")
     private String password;
 
+    @NotBlank(message = "Role is required")
     private String role;
 
 

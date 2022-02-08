@@ -2,12 +2,15 @@ package ru.afso.projectzero.dto;
 
 import ru.afso.projectzero.entities.AnswerEntity;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class QuestionDTO {
 
+    @NotBlank(message = "Title is required")
     private String title;
 
+    @NotBlank(message = "Type is required")
     private String type;
 
     private List<AnswerEntity> answers;

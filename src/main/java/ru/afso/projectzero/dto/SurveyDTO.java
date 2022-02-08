@@ -3,21 +3,27 @@ package ru.afso.projectzero.dto;
 import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.ResearchEntity;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
 
 public class SurveyDTO {
 
+    @NotNull(message = "Begin date is required")
     private Date beginDate;
 
+    @NotNull(message = "End date is required")
     private Date endDate;
 
+    @NotBlank(message = "Title is required")
     private String title;
 
     private String description;
 
     private List<QuestionEntity> questions;
 
+    @NotNull(message = "Research is required")
     private ResearchEntity research;
 
 

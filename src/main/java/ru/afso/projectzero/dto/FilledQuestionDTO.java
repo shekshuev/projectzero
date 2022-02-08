@@ -1,9 +1,5 @@
 package ru.afso.projectzero.dto;
 
-import ru.afso.projectzero.entities.AnswerEntity;
-import ru.afso.projectzero.entities.FilledQuestionEntity;
-import ru.afso.projectzero.entities.QuestionEntity;
-
 import java.util.Date;
 
 public class FilledQuestionDTO {

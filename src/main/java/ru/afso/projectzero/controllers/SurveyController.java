@@ -49,20 +49,20 @@ public class SurveyController {
 
     @PostMapping(consumes = { "application/json" })
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> createSurvey(@RequestBody SurveyDTO surveyDTO) {
+    public ApiResponse<?> createSurvey(@Valid @RequestBody SurveyDTO surveyDTO) {
         return new SuccessResponse<>(surveyService.createSurvey(new SurveyEntity(surveyDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> updateSurvey(@RequestBody SurveyDTO surveyDTO, @PathVariable long id) {
+    public ApiResponse<?> updateSurvey(@Valid @RequestBody SurveyDTO surveyDTO, @PathVariable long id) {
         return new SuccessResponse<>(surveyService.updateSurvey(
                 surveyService.getSurveyById(id), surveyDTO).toModel());
     }
 
     @PostMapping(value = "/{id}/question", consumes = { "application/json" })
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> addQuestionToSurvey(@RequestBody QuestionDTO questionDTO, @PathVariable long id) {
+    public ApiResponse<?> addQuestionToSurvey(@Valid @RequestBody QuestionDTO questionDTO, @PathVariable long id) {
         return new SuccessResponse<>(surveyService.addQuestion(
                 surveyService.getSurveyById(id), new QuestionEntity(questionDTO)).toModel());
     }
