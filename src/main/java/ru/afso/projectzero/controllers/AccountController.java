@@ -34,7 +34,8 @@ public class AccountController {
         int offset = optionalOffset.orElse(0);
         HashMap<String, Object> map = new HashMap<>();
         map.put("total", accountService.getTotalAccountsCount());
-        map.put("accounts", accountService.getAccounts(offset, count).stream().map(AccountEntity::toModel).collect(Collectors.toList()));
+        map.put("accounts", accountService.getAccounts(offset, count).stream().map(AccountEntity::toModel)
+                .collect(Collectors.toList()));
         return new SuccessResponse<>(map);
     }
 
