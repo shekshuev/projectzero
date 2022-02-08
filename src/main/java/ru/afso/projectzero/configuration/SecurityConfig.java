@@ -16,6 +16,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
 
     private final JwtFilter filter;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
 
     public SecurityConfig(JwtFilter filter) {
         this.filter = filter;
@@ -31,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1.0/auth/signin").permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class)

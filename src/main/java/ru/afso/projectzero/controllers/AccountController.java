@@ -1,5 +1,8 @@
 package ru.afso.projectzero.controllers;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,21 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @ApiOperation(value = "Get accounts", notes = "Get all accounts with pagination")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "count",
+                    value = "Accounts count",
+                    defaultValue = "5",
+                    required = false,
+                    dataType = "Integer",
+                    paramType = "query"),
+            @ApiImplicitParam(name = "offset",
+                    value = "Accounts count",
+                    defaultValue = "5",
+                    required = false,
+                    dataType = "Integer",
+                    paramType = "query")
+    })
     @GetMapping
     public ApiResponse<HashMap<String, Object>> getAccounts(
             @RequestParam(name="count") Optional<Integer> optionalCount,
@@ -39,6 +57,12 @@ public class AccountController {
         return new SuccessResponse<>(map);
     }
 
+    @ApiOperation(value = "Get account", notes = "Get account by ID")
+    @ApiImplicitParam(name = "id",
+            value = "Account ID",
+            required = true,
+            dataType = "Integer",
+            paramType = "path")
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ApiResponse<AccountModel> getAccount(@PathVariable long id) {
