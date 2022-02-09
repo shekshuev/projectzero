@@ -1,6 +1,6 @@
 package ru.afso.projectzero.utils;
 
-public abstract class ApiResponse<T> {
+public abstract class BaseResponse<T> {
 
     protected boolean success;
 

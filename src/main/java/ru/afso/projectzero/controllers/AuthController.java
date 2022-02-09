@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.afso.projectzero.dto.JwtRequestDTO;
 import ru.afso.projectzero.models.TokenResponseModel;
 import ru.afso.projectzero.services.AuthService;
-import ru.afso.projectzero.utils.ApiResponse;
+import ru.afso.projectzero.utils.BaseResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 
 import javax.security.auth.message.AuthException;
@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("signin")
-    public ApiResponse<TokenResponseModel> login(@RequestBody JwtRequestDTO jwtRequestDTO) throws AuthException {
+    public BaseResponse<TokenResponseModel> login(@RequestBody JwtRequestDTO jwtRequestDTO) throws AuthException {
         return new SuccessResponse<>(authService.login(jwtRequestDTO));
     }
 }

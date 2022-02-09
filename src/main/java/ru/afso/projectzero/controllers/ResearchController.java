@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.ResearchDTO;
 import ru.afso.projectzero.entities.ResearchEntity;
 import ru.afso.projectzero.services.ResearchService;
-import ru.afso.projectzero.utils.ApiResponse;
+import ru.afso.projectzero.utils.BaseResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 
 import javax.validation.Valid;
@@ -26,7 +26,7 @@ public class ResearchController {
     }
 
     @GetMapping
-    public ApiResponse<HashMap<String, Object>> getResearches(
+    public BaseResponse<HashMap<String, Object>> getResearches(
             @RequestParam(name="count") Optional<Integer> optionalCount,
             @RequestParam(name="offset") Optional<Integer> optionalOffset
     ) {
@@ -40,19 +40,19 @@ public class ResearchController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<?> getResearch(@PathVariable long id) {
+    public BaseResponse<?> getResearch(@PathVariable long id) {
         return new SuccessResponse<>(researchService.getResearchById(id).toModel());
     }
 
     @PostMapping(consumes = {"application/json"})
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> createResearch(@Valid @RequestBody ResearchDTO researchDTO) {
+    public BaseResponse<?> createResearch(@Valid @RequestBody ResearchDTO researchDTO) {
         return new SuccessResponse<>(researchService.createResearch(new ResearchEntity(researchDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = {"application/json"})
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> updateResearch(@Valid @RequestBody ResearchDTO researchDTO, @PathVariable long id) {
+    public BaseResponse<?> updateResearch(@Valid @RequestBody ResearchDTO researchDTO, @PathVariable long id) {
         ResearchEntity research = new ResearchEntity(researchDTO);
         research.setId(id);
         return new SuccessResponse<>(researchService.updateResearch(research).toModel());
@@ -60,7 +60,7 @@ public class ResearchController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> deleteResearch(@PathVariable long id) {
+    public BaseResponse<?> deleteResearch(@PathVariable long id) {
         researchService.deleteResearchById(id);
         return new SuccessResponse<>(true);
     }

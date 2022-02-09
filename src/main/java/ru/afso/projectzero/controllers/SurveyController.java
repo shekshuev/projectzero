@@ -10,7 +10,7 @@ import ru.afso.projectzero.entities.FilledSurveyEntity;
 import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
 import ru.afso.projectzero.services.SurveyService;
-import ru.afso.projectzero.utils.ApiResponse;
+import ru.afso.projectzero.utils.BaseResponse;
 import ru.afso.projectzero.utils.SuccessResponse;
 
 import javax.validation.Valid;
@@ -30,7 +30,7 @@ public class SurveyController {
     }
 
     @GetMapping
-    public ApiResponse<HashMap<String, Object>> getSurveys(
+    public BaseResponse<HashMap<String, Object>> getSurveys(
             @RequestParam(name="count") Optional<Integer> optionalCount,
             @RequestParam(name="offset") Optional<Integer> optionalOffset
     ) {
@@ -43,47 +43,47 @@ public class SurveyController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<?> getSurvey(@PathVariable long id) {
+    public BaseResponse<?> getSurvey(@PathVariable long id) {
         return new SuccessResponse<>(surveyService.getSurveyById(id).toModel());
     }
 
     @PostMapping(consumes = { "application/json" })
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> createSurvey(@Valid @RequestBody SurveyDTO surveyDTO) {
+    public BaseResponse<?> createSurvey(@Valid @RequestBody SurveyDTO surveyDTO) {
         return new SuccessResponse<>(surveyService.createSurvey(new SurveyEntity(surveyDTO)).toModel());
     }
 
     @PutMapping(value = "/{id}", consumes = { "application/json" })
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> updateSurvey(@Valid @RequestBody SurveyDTO surveyDTO, @PathVariable long id) {
+    public BaseResponse<?> updateSurvey(@Valid @RequestBody SurveyDTO surveyDTO, @PathVariable long id) {
         return new SuccessResponse<>(surveyService.updateSurvey(
                 surveyService.getSurveyById(id), surveyDTO).toModel());
     }
 
     @PostMapping(value = "/{id}/question", consumes = { "application/json" })
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> addQuestionToSurvey(@Valid @RequestBody QuestionDTO questionDTO, @PathVariable long id) {
+    public BaseResponse<?> addQuestionToSurvey(@Valid @RequestBody QuestionDTO questionDTO, @PathVariable long id) {
         return new SuccessResponse<>(surveyService.addQuestion(
                 surveyService.getSurveyById(id), new QuestionEntity(questionDTO)).toModel());
     }
 
     @DeleteMapping("/question/{questionId}")
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> deleteQuestionFromSurvey(@PathVariable long questionId) {
+    public BaseResponse<?> deleteQuestionFromSurvey(@PathVariable long questionId) {
         surveyService.deleteQuestionById(questionId);
         return new SuccessResponse<>(true);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<Boolean> deleteSurvey(@PathVariable long id) {
+    public BaseResponse<Boolean> deleteSurvey(@PathVariable long id) {
         surveyService.deleteSurveyById(id);
         return new SuccessResponse<>(true);
     }
 
     @GetMapping("/filled")
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<HashMap<String, Object>> getFilledSurveys(
+    public BaseResponse<HashMap<String, Object>> getFilledSurveys(
             @RequestParam(name="count") Optional<Integer> optionalCount,
             @RequestParam(name="offset") Optional<Integer> optionalOffset
     ) {
@@ -97,12 +97,12 @@ public class SurveyController {
 
     @GetMapping("/filled/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ApiResponse<?> getFilledSurvey(@PathVariable long id) {
+    public BaseResponse<?> getFilledSurvey(@PathVariable long id) {
         return new SuccessResponse<>(surveyService.getFilledSurveyById(id).toModel());
     }
 
     @PostMapping(value="/filled", consumes = { "application/json" })
-    public ApiResponse<?> createFilledSurvey(@Valid @RequestBody FilledSurveyDTO filledSurveyDTO) {
+    public BaseResponse<?> createFilledSurvey(@Valid @RequestBody FilledSurveyDTO filledSurveyDTO) {
         return new SuccessResponse<>(surveyService.createFilledSurvey(new FilledSurveyEntity(filledSurveyDTO)).toModel());
     }
 }

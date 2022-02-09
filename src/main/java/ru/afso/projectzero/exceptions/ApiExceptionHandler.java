@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.afso.projectzero.utils.ApiResponse;
+import ru.afso.projectzero.utils.BaseResponse;
 import ru.afso.projectzero.utils.ErrorResponse;
 
 import javax.security.auth.message.AuthException;
@@ -28,22 +28,22 @@ import java.util.NoSuchElementException;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ApiResponse<String> handleConstraintViolationException(ConstraintViolationException e) {
+    public BaseResponse<String> handleConstraintViolationException(ConstraintViolationException e) {
         return new ErrorResponse<>(String.format("Constraint error: %s", e.getConstraintName()));
     }
 
     @ExceptionHandler({EmptyResultDataAccessException.class, NoSuchElementException.class})
-    public ApiResponse<String> handleEmptyResultDataAccessException() {
+    public BaseResponse<String> handleEmptyResultDataAccessException() {
         return new ErrorResponse<>("No entity with such id!");
     }
 
     @ExceptionHandler({AuthException.class, AccessDeniedException.class, JwtException.class})
-    public ResponseEntity<? extends ApiResponse> handleAuthException(Exception e) {
+    public ResponseEntity<? extends BaseResponse> handleAuthException(Exception e) {
         return new ResponseEntity<>(new ErrorResponse<>(e.getMessage()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ApiResponse<String> handleNumberFormatException(MethodArgumentTypeMismatchException e) {
+    public BaseResponse<String> handleNumberFormatException(MethodArgumentTypeMismatchException e) {
         return new ErrorResponse<>(String.format("Not valid argument: %s", e.getParameter().getParameterName()));
     }
 
