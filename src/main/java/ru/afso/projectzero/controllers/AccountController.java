@@ -11,8 +11,6 @@ import ru.afso.projectzero.entities.AccountEntity;
 import ru.afso.projectzero.models.AccountModel;
 import ru.afso.projectzero.models.ResponseAccountListModel;
 import ru.afso.projectzero.services.AccountService;
-import ru.afso.projectzero.utils.BaseResponse;
-import ru.afso.projectzero.utils.SuccessResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
