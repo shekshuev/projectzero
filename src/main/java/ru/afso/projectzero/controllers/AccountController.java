@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/account")
-@ApiOperation(value = "Get accounts", notes = "Get all accounts with pagination")
+@Api(value = "accounts", tags = {"Account API"})
 public class AccountController {
 
     private final AccountService accountService;
@@ -29,7 +29,9 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @ApiOperation(value = "Get accounts", notes = "Get all accounts with pagination")
+    @ApiOperation(value = "Get accounts", notes = "Get all accounts with pagination", authorizations = {
+            @Authorization(value = "JWT")
+    })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "count",
                     value = "Count of accounts to return",
@@ -44,7 +46,7 @@ public class AccountController {
     })
     @ApiResponse(code = 200, message = "Returns total account count and account list",
             response = ResponseAccountListModel.class)
-    @GetMapping
+    @GetMapping(produces = {"application/json"})
     public ResponseEntity<ResponseAccountListModel> getAccounts(
             @RequestParam(name="count") Optional<Integer> optionalCount,
             @RequestParam(name="offset") Optional<Integer> optionalOffset
@@ -57,20 +59,24 @@ public class AccountController {
                         .stream().map(AccountEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Get account", notes = "Get account by ID")
+    @ApiOperation(value = "Get account", notes = "Get account by ID", authorizations = {
+            @Authorization(value = "JWT")
+    })
     @ApiImplicitParam(name = "id",
             value = "Account ID",
             required = true,
             dataType = "Integer",
             paramType = "path")
     @ApiResponse(code = 200, message = "Returns account by its ID", response = AccountModel.class)
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}", produces = {"application/json"})
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<AccountModel> getAccount(@PathVariable long id) {
         return new ResponseEntity<>(accountService.getAccountById(id).toModel(), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Create account", notes = "Create new account")
+    @ApiOperation(value = "Create account", notes = "Create new account", authorizations = {
+            @Authorization(value = "JWT")
+    })
     @ApiResponse(code = 201, message = "Returns empty body if account was created.", responseHeaders = {
             @ResponseHeader(name = "Location", description = "Contains account location URI", response = String.class)
     })
@@ -88,14 +94,16 @@ public class AccountController {
         return ResponseEntity.created(location).build();
     }
 
-    @ApiOperation(value = "Update account", notes = "Update existing account. All fields will be updated")
+    @ApiOperation(value = "Update account", notes = "Update existing account. All fields will be updated", authorizations = {
+            @Authorization(value = "JWT")
+    })
     @ApiResponse(code = 200, message = "Returns created account with its ID", response = AccountModel.class)
     @ApiImplicitParam(name = "id",
             value = "Account ID",
             required = true,
             dataType = "Integer",
             paramType = "path")
-    @PutMapping(value = "/{id}", consumes = { "application/json" })
+    @PutMapping(value = "/{id}", consumes = { "application/json" }, produces = {"application/json"})
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<AccountModel> updateAccount(@Valid @RequestBody @ApiParam(
             name="Account",
@@ -108,7 +116,9 @@ public class AccountController {
         return new ResponseEntity<>(accountService.updateAccount(account).toModel(), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Delete account", notes = "Removes existing account.")
+    @ApiOperation(value = "Delete account", notes = "Removes existing account", authorizations = {
+            @Authorization(value = "JWT")
+    })
     @ApiResponse(code = 204, message = "Removes account by ID")
     @ApiImplicitParam(name = "id",
             value = "Account ID",
