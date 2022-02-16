@@ -1,6 +1,17 @@
 package ru.afso.projectzero.controllers;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +30,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/accounts")
-@Api(value = "accounts", tags = {"Accounts"})
+@Tag(name = "Accounts", description = "Accounts management API")
+@SecurityScheme(name = "Administrator", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP)
 public class AccountController {
 
     private final AccountService accountService;
@@ -29,25 +41,19 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @ApiOperation(value = "Get accounts", notes = "Get all accounts with pagination", authorizations = {
-            @Authorization(value = "JWT")
+    @Operation(summary = "Get accounts",
+            description = "Returns all accounts with pagination",
+            security = @SecurityRequirement(name = "Administrator"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns total account count and account list"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated",
+                    content = @Content(schema = @Schema(implementation = Void.class)))
     })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "count",
-                    value = "Count of accounts to return",
-                    defaultValue = "5",
-                    dataType = "Integer",
-                    paramType = "query"),
-            @ApiImplicitParam(name = "offset",
-                    value = "Accounts offset, i.e. from which account return",
-                    defaultValue = "5",
-                    dataType = "Integer",
-                    paramType = "query")
-    })
-    @ApiResponse(code = 200, message = "Returns total account count and account list")
     @GetMapping(produces = {"application/json"})
     public ResponseEntity<ResponseListModel<AccountModel>> getAccounts(
+            @Parameter(name = "count", in = ParameterIn.QUERY, description = "Accounts count to return, default is 5")
             @RequestParam(name="count") Optional<Integer> optionalCount,
+            @Parameter(name = "offset", in = ParameterIn.QUERY, description = "From which account return, default is 0")
             @RequestParam(name="offset") Optional<Integer> optionalOffset
     ) {
         int count = optionalCount.orElse(5);
@@ -58,76 +64,90 @@ public class AccountController {
                         .stream().map(AccountEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Get account", notes = "Get account by ID", authorizations = {
-            @Authorization(value = "JWT")
+    @Operation(summary = "Get account by ID",
+            description = "Return account by its ID",
+            security = @SecurityRequirement(name = "Administrator"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Return account by its ID"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated",
+                    content = @Content(schema = @Schema(implementation = Void.class))),
+            @ApiResponse(responseCode = "404", description = "Account not found",
+                    content = @Content(schema = @Schema(implementation = Void.class)))
     })
-    @ApiImplicitParam(name = "id",
-            value = "Account ID",
-            required = true,
-            dataType = "Integer",
-            paramType = "path")
-    @ApiResponse(code = 200, message = "Returns account by its ID", response = AccountModel.class)
     @GetMapping(value="/{id}", produces = {"application/json"})
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<AccountModel> getAccount(@PathVariable long id) {
+    public ResponseEntity<AccountModel> getAccount(
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Account id")
+            @PathVariable long id
+    ) {
         return new ResponseEntity<>(accountService.getAccountById(id).toModel(), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Create account", notes = "Create new account", authorizations = {
-            @Authorization(value = "JWT")
-    })
-    @ApiResponse(code = 201, message = "Returns empty body if account was created.", responseHeaders = {
-            @ResponseHeader(name = "Location", description = "Contains account location URI", response = String.class)
+    @Operation(summary = "Create account",
+            description = "Creates new account",
+            security = @SecurityRequirement(name = "Administrator"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Returns empty body if account was created", headers = {
+                    @Header(name = "Location", description = "Contains account location URI")
+            }),
+            @ApiResponse(responseCode = "401", description = "Not authenticated",
+                    content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @PostMapping(consumes = { "application/json" })
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<Void> createAccount(@Valid @RequestBody @ApiParam(
-            name="Account",
-            value = "Account data in json format without ID",
-            required = true,
-            type = "ru.afso.projectzero.dto.AccountDTO"
-    ) AccountDTO accountDTO) {
+    public ResponseEntity<Void> createAccount(
+            @Parameter(in = ParameterIn.DEFAULT, description = "Account to add. Cannot be null or empty",
+                    required = true, schema = @Schema(implementation = AccountDTO.class))
+            @Valid @RequestBody AccountDTO accountDTO
+    ) {
         AccountModel model = accountService.createAccount(new AccountEntity(accountDTO)).toModel();
         URI location = URI.create(String.format("/account/%d", model.getId()));
         return ResponseEntity.created(location).build();
     }
 
-    @ApiOperation(value = "Update account", notes = "Update existing account. All fields will be updated", authorizations = {
-            @Authorization(value = "JWT")
+    @Operation(summary = "Update account",
+            description = "Updates existing account",
+            security = @SecurityRequirement(name = "Administrator"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Returns empty body if account was updated"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated",
+                    content = @Content(schema = @Schema(implementation = Void.class))),
+            @ApiResponse(responseCode = "404", description = "Account not found",
+                    content = @Content(schema = @Schema(implementation = Void.class)))
     })
-    @ApiResponse(code = 200, message = "Returns created account with its ID", response = AccountModel.class)
-    @ApiImplicitParam(name = "id",
-            value = "Account ID",
-            required = true,
-            dataType = "Integer",
-            paramType = "path")
     @PutMapping(value = "/{id}", consumes = { "application/json" }, produces = {"application/json"})
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<AccountModel> updateAccount(@Valid @RequestBody @ApiParam(
-            name="Account",
-            value = "Account data in json format without ID",
-            required = true,
-            type = "ru.afso.projectzero.dto.AccountDTO"
-    ) AccountDTO accountDTO, @PathVariable long id) {
+    public ResponseEntity<Void> updateAccount(
+            @Parameter(in = ParameterIn.DEFAULT, description = "Account data to update",
+                    required = true, schema = @Schema(implementation = AccountDTO.class))
+            @Valid @RequestBody AccountDTO accountDTO,
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Account id")
+            @PathVariable long id
+    ) {
         AccountEntity account = new AccountEntity(accountDTO);
         account.setId(id);
-        return new ResponseEntity<>(accountService.updateAccount(account).toModel(), HttpStatus.OK);
+        accountService.updateAccount(account);
+        return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(value = "Delete account", notes = "Removes existing account", authorizations = {
-            @Authorization(value = "JWT")
+    @Operation(summary = "Delete account",
+            description = "Deletes existing account",
+            security = @SecurityRequirement(name = "Administrator"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Returns empty body if account was deleted"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated",
+                    content = @Content(schema = @Schema(implementation = Void.class))),
+            @ApiResponse(responseCode = "404", description = "Account not found",
+                    content = @Content(schema = @Schema(implementation = Void.class)))
     })
-    @ApiResponse(code = 204, message = "Removes account by ID")
-    @ApiImplicitParam(name = "id",
-            value = "Account ID",
-            required = true,
-            dataType = "Integer",
-            paramType = "path")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin')")
-    public ResponseEntity<Void> deleteAccount(@PathVariable long id) {
+    public ResponseEntity<Void> deleteAccount(
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Account id")
+            @PathVariable long id
+    ) {
         accountService.deleteAccountById(id);
         return ResponseEntity.noContent().build();
     }

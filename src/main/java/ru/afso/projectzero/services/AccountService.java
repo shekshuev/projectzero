@@ -26,11 +26,11 @@ public class AccountService {
     }
 
     public AccountEntity getAccountByUsername(String username) {
-        return accountRepository.findByUserName(username).orElse(null);
+        return accountRepository.findByUserName(username).orElseThrow();
     }
 
     public AccountEntity getAccountById(long id) {
-        return accountRepository.findById(id).orElse(null);
+        return accountRepository.findById(id).orElseThrow();
     }
 
     public AccountEntity createAccount(AccountEntity account) {

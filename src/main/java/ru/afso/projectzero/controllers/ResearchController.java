@@ -1,6 +1,6 @@
 package ru.afso.projectzero.controllers;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/researches")
-@Api(value = "researches", tags = {"Researches"})
+//@Api(value = "researches", tags = {"Researches"})
 public class ResearchController {
 
     private final ResearchService researchService;
@@ -30,22 +30,23 @@ public class ResearchController {
         this.researchService = researchService;
     }
 
-    @ApiOperation(value = "Get researches", notes = "Get all researches with pagination", authorizations = {
-            @Authorization(value = "JWT")
-    })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "count",
-                    value = "Count of researches to return",
-                    defaultValue = "5",
-                    dataType = "Integer",
-                    paramType = "query"),
-            @ApiImplicitParam(name = "offset",
-                    value = "Researches offset, i.e. from which research return",
-                    defaultValue = "5",
-                    dataType = "Integer",
-                    paramType = "query")
-    })
-    @ApiResponse(code = 200, message = "Returns total researches count and researches list")
+
+//    @Operation(value = "Get researches", notes = "Get all researches with pagination", authorizations = {
+//            @Authorization(value = "JWT")
+//    })
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "count",
+//                    value = "Count of researches to return",
+//                    defaultValue = "5",
+//                    dataType = "Integer",
+//                    paramType = "query"),
+//            @ApiImplicitParam(name = "offset",
+//                    value = "Researches offset, i.e. from which research return",
+//                    defaultValue = "5",
+//                    dataType = "Integer",
+//                    paramType = "query")
+//    })
+//    @ApiResponse(code = 200, message = "Returns total researches count and researches list")
     @GetMapping
     public ResponseEntity<ResponseListModel<ResearchModel>> getResearches(
             @RequestParam(name="count") Optional<Integer> optionalCount,
