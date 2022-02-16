@@ -25,7 +25,7 @@ public class ResearchService {
     }
 
     public ResearchEntity getResearchById(long id) {
-        return researchRepository.findById(id).orElse(null);
+        return researchRepository.findById(id).orElseThrow();
     }
 
     public ResearchEntity createResearch(ResearchEntity survey) {

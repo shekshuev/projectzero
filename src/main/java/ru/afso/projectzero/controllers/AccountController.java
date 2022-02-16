@@ -41,6 +41,8 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+
+
     @Operation(summary = "Get accounts",
             description = "Returns all accounts with pagination",
             security = @SecurityRequirement(name = "Administrator"))
@@ -64,6 +66,8 @@ public class AccountController {
                         .stream().map(AccountEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
     }
 
+
+
     @Operation(summary = "Get account by ID",
             description = "Return account by its ID",
             security = @SecurityRequirement(name = "Administrator"))
@@ -83,6 +87,8 @@ public class AccountController {
         return new ResponseEntity<>(accountService.getAccountById(id).toModel(), HttpStatus.OK);
     }
 
+
+
     @Operation(summary = "Create account",
             description = "Creates new account",
             security = @SecurityRequirement(name = "Administrator"))
@@ -90,11 +96,12 @@ public class AccountController {
             @ApiResponse(responseCode = "201", description = "Returns empty body if account was created", headers = {
                     @Header(name = "Location", description = "Contains account location URI")
             }),
+            @ApiResponse(responseCode = "400", description = "Other error",
+                    content = @Content(schema = @Schema(implementation = String.class, description = "Error message"))),
             @ApiResponse(responseCode = "401", description = "Not authenticated",
                     content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @PostMapping(consumes = { "application/json" })
-    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Void> createAccount(
             @Parameter(in = ParameterIn.DEFAULT, description = "Account to add. Cannot be null or empty",
@@ -102,15 +109,19 @@ public class AccountController {
             @Valid @RequestBody AccountDTO accountDTO
     ) {
         AccountModel model = accountService.createAccount(new AccountEntity(accountDTO)).toModel();
-        URI location = URI.create(String.format("/account/%d", model.getId()));
+        URI location = URI.create(String.format("/accounts/%d", model.getId()));
         return ResponseEntity.created(location).build();
     }
+
+
 
     @Operation(summary = "Update account",
             description = "Updates existing account",
             security = @SecurityRequirement(name = "Administrator"))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Returns empty body if account was updated"),
+            @ApiResponse(responseCode = "400", description = "Other error",
+                    content = @Content(schema = @Schema(implementation = String.class, description = "Error message"))),
             @ApiResponse(responseCode = "401", description = "Not authenticated",
                     content = @Content(schema = @Schema(implementation = Void.class))),
             @ApiResponse(responseCode = "404", description = "Account not found",
@@ -131,6 +142,8 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
 
+
+
     @Operation(summary = "Delete account",
             description = "Deletes existing account",
             security = @SecurityRequirement(name = "Administrator"))
@@ -141,7 +154,6 @@ public class AccountController {
             @ApiResponse(responseCode = "404", description = "Account not found",
                     content = @Content(schema = @Schema(implementation = Void.class)))
     })
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Void> deleteAccount(
