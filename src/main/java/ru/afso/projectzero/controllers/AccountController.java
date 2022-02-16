@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.AccountDTO;
 import ru.afso.projectzero.entities.AccountEntity;
 import ru.afso.projectzero.models.AccountModel;
-import ru.afso.projectzero.models.ResponseAccountListModel;
+import ru.afso.projectzero.models.ResponseListModel;
 import ru.afso.projectzero.services.AccountService;
 
 import javax.validation.Valid;
@@ -18,8 +18,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1.0/account")
-@Api(value = "accounts", tags = {"Account API"})
+@RequestMapping("/api/v1.0/accounts")
+@Api(value = "accounts", tags = {"Accounts"})
 public class AccountController {
 
     private final AccountService accountService;
@@ -44,16 +44,15 @@ public class AccountController {
                     dataType = "Integer",
                     paramType = "query")
     })
-    @ApiResponse(code = 200, message = "Returns total account count and account list",
-            response = ResponseAccountListModel.class)
+    @ApiResponse(code = 200, message = "Returns total account count and account list")
     @GetMapping(produces = {"application/json"})
-    public ResponseEntity<ResponseAccountListModel> getAccounts(
+    public ResponseEntity<ResponseListModel<AccountModel>> getAccounts(
             @RequestParam(name="count") Optional<Integer> optionalCount,
             @RequestParam(name="offset") Optional<Integer> optionalOffset
     ) {
         int count = optionalCount.orElse(5);
         int offset = optionalOffset.orElse(0);
-        return new ResponseEntity<>(new ResponseAccountListModel(
+        return new ResponseEntity<>(new ResponseListModel<>(
                 accountService.getTotalAccountsCount(),
                 accountService.getAccounts(offset, count)
                         .stream().map(AccountEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);

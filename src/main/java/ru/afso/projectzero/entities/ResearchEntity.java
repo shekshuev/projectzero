@@ -103,7 +103,7 @@ public class ResearchEntity implements ModelConvertable {
     }
 
     @Override
-    public BaseModel toModel() {
+    public ResearchModel toModel() {
         ResearchModel research = new ResearchModel();
         research.setId(id);
         research.setBeginDate(beginDate);
