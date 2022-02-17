@@ -28,12 +28,12 @@ public class ResearchService {
         return researchRepository.findById(id).orElseThrow();
     }
 
-    public ResearchEntity createResearch(ResearchEntity survey) {
-        return researchRepository.save(survey);
+    public ResearchEntity createResearch(ResearchEntity research) {
+        return researchRepository.save(research);
     }
 
-    public ResearchEntity updateResearch(ResearchEntity survey) {
-        return researchRepository.save(survey);
+    public ResearchEntity updateResearch(ResearchEntity research) {
+        return researchRepository.save(research);
     }
 
     public void deleteResearchById(long id) {

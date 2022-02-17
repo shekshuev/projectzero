@@ -1,12 +1,8 @@
 package ru.afso.projectzero.dto;
 
-import ru.afso.projectzero.entities.QuestionEntity;
-import ru.afso.projectzero.entities.ResearchEntity;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
-import java.util.List;
 
 public class SurveyDTO {
 
@@ -21,10 +17,8 @@ public class SurveyDTO {
 
     private String description;
 
-    private List<QuestionEntity> questions;
-
-    @NotNull(message = "Research is required")
-    private ResearchEntity research;
+    @NotNull(message = "Research id is required")
+    private long researchId;
 
 
 
@@ -60,19 +54,11 @@ public class SurveyDTO {
         this.description = description;
     }
 
-    public List<QuestionEntity> getQuestions() {
-        return questions;
+    public long getResearchId() {
+        return researchId;
     }
 
-    public void setQuestions(List<QuestionEntity> questions) {
-        this.questions = questions;
-    }
-
-    public ResearchEntity getResearch() {
-        return research;
-    }
-
-    public void setResearch(ResearchEntity research) {
-        this.research = research;
+    public void setResearchId(long researchId) {
+        this.researchId = researchId;
     }
 }

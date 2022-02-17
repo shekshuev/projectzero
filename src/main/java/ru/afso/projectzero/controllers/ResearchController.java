@@ -41,6 +41,7 @@ public class ResearchController {
     }
 
 
+
     @Operation(summary = "Get researches",
             description = "Returns all researches with pagination",
             security = @SecurityRequirement(name = "Administrator"))

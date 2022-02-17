@@ -1,7 +1,6 @@
 package ru.afso.projectzero.entities;
 
 import ru.afso.projectzero.dto.SurveyDTO;
-import ru.afso.projectzero.models.BaseModel;
 import ru.afso.projectzero.models.SurveyModel;
 
 import javax.persistence.*;
@@ -34,14 +33,14 @@ public class SurveyEntity implements ModelConvertable {
     private List<QuestionEntity> questions;
 
     @ManyToOne
-    @JoinColumn(name = "research_id")
+    @JoinColumn(name = "research_id", insertable = false, updatable = false)
     private ResearchEntity research;
+
+    @Column(name = "research_id")
+    private long researchId;
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
     private List<FilledSurveyEntity> filledSurveys;
-
-    // Change to geojson or something else
-    // private Object position;
 
 
 
@@ -52,18 +51,7 @@ public class SurveyEntity implements ModelConvertable {
         endDate = surveyDTO.getEndDate();
         title = surveyDTO.getTitle();
         description = surveyDTO.getDescription();
-        if (surveyDTO.getQuestions() != null) {
-            questions = surveyDTO.getQuestions();
-            for (QuestionEntity question : questions) {
-                question.setSurvey(this);
-                if (question.getAnswers() != null) {
-                    for (AnswerEntity answer: question.getAnswers()) {
-                        answer.setQuestion(question);
-                    }
-                }
-            }
-        }
-        research = surveyDTO.getResearch();
+        researchId = surveyDTO.getResearchId();
         createdAt = new Date();
     }
 
@@ -145,16 +133,8 @@ public class SurveyEntity implements ModelConvertable {
         }
     }
 
-//    public Object getPosition() {
-//        return position;
-//    }
-//
-//    public void setPosition(Object position) {
-//        this.position = position;
-//    }
-
     @Override
-    public BaseModel toModel() {
+    public SurveyModel toModel() {
         SurveyModel survey = new SurveyModel();
         survey.setId(id);
         survey.setBeginDate(beginDate);
