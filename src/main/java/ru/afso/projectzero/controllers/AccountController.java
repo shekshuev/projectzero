@@ -52,6 +52,7 @@ public class AccountController {
                     content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @GetMapping(produces = {"application/json"})
+    @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<ResponseListModel<AccountModel>> getAccounts(
             @Parameter(name = "count", in = ParameterIn.QUERY, description = "Accounts count to return, default is 5")
             @RequestParam(name="count") Optional<Integer> optionalCount,

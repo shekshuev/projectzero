@@ -51,6 +51,7 @@ public class ResearchController {
                     content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @GetMapping(produces = {"application/json"})
+    @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<ResponseListModel<ResearchModel>> getResearches(
             @Parameter(name = "count", in = ParameterIn.QUERY,
                     description = "Researches count to return, default is 5")
@@ -80,6 +81,7 @@ public class ResearchController {
                     content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @GetMapping(value="/{id}", produces = {"application/json"})
+    @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<ResearchModel> getResearch(
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Research id")
             @PathVariable long id

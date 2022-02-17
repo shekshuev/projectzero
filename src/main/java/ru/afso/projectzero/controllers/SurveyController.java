@@ -53,13 +53,17 @@ public class SurveyController {
 
     @Operation(summary = "Get surveys",
             description = "Returns all surveys with pagination",
-            security = @SecurityRequirement(name = "Administrator"))
+            security = {
+                    @SecurityRequirement(name = "Administrator"),
+                    @SecurityRequirement(name = "Interviewer")
+            })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returns total surveys count and surveys list"),
             @ApiResponse(responseCode = "401", description = "Not authenticated",
                     content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @GetMapping(produces = {"application/json"})
+    @PreAuthorize("hasAnyAuthority('admin','interviewer')")
     public ResponseEntity<ResponseListModel<SurveyModel>> getSurveys(
             @Parameter(name = "count", in = ParameterIn.QUERY,
                     description = "Surveys count to return, default is 5")
@@ -80,7 +84,10 @@ public class SurveyController {
 
     @Operation(summary = "Get survey by ID",
             description = "Return survey by its ID",
-            security = @SecurityRequirement(name = "Administrator"))
+            security = {
+                    @SecurityRequirement(name = "Administrator"),
+                    @SecurityRequirement(name = "Interviewer")
+            })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Return survey by its ID"),
             @ApiResponse(responseCode = "401", description = "Not authenticated",
@@ -89,6 +96,7 @@ public class SurveyController {
                     content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @GetMapping(value="/{id}", produces = {"application/json"})
+    @PreAuthorize("hasAnyAuthority('admin','interviewer')")
     public ResponseEntity<SurveyModel> getSurvey(
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Survey id")
             @PathVariable long id
