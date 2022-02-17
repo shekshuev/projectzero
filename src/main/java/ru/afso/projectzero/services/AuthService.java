@@ -10,6 +10,7 @@ import ru.afso.projectzero.entities.AccountEntity;
 import ru.afso.projectzero.models.TokenResponseModel;
 
 import javax.security.auth.message.AuthException;
+import java.util.NoSuchElementException;
 
 @Service
 public class AuthService {
@@ -24,15 +25,17 @@ public class AuthService {
     }
 
     public TokenResponseModel login(@NonNull JwtRequestDTO jwtRequestDTO) throws AuthException {
-        final AccountEntity account = accountService.getAccountByUsername(jwtRequestDTO.getLogin());
-        String s1 = account.getPasswordHash();
-        String s2 = new BCryptPasswordEncoder().encode(jwtRequestDTO.getPassword());
-        if (new BCryptPasswordEncoder().matches(jwtRequestDTO.getPassword(), account.getPasswordHash())) {
-            final String accessToken = jwtService.generateAccessToken(account.toModel());
-            final String refreshToken = jwtService.generateRefreshToken(account.toModel());
-            return new TokenResponseModel(accessToken, refreshToken);
-        } else {
-            throw new AuthException("Wrong password!");
+        try {
+            final AccountEntity account = accountService.getAccountByUsername(jwtRequestDTO.getLogin());
+            if (new BCryptPasswordEncoder().matches(jwtRequestDTO.getPassword(), account.getPasswordHash())) {
+                final String accessToken = jwtService.generateAccessToken(account.toModel());
+                final String refreshToken = jwtService.generateRefreshToken(account.toModel());
+                return new TokenResponseModel(accessToken, refreshToken);
+            } else {
+                throw new AuthException("Wrong password!");
+            }
+        } catch (NoSuchElementException e) {
+            throw new AuthException(String.format("User '%s' not found!", jwtRequestDTO.getLogin()));
         }
     }
 

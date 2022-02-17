@@ -24,6 +24,13 @@ public class DatabaseInit implements InitializingBean {
             dto.setPassword("admin");
             dto.setRole("admin");
             accountService.createAccount(new AccountEntity(dto));
+            dto.setFirstName("Jane");
+            dto.setLastName("Doe");
+            dto.setMiddleName("J.");
+            dto.setUserName("interviewer");
+            dto.setPassword("interviewer");
+            dto.setRole("interviewer");
+            accountService.createAccount(new AccountEntity(dto));
         }
     }
 }

@@ -152,7 +152,7 @@ public class FilledSurveyEntity implements ModelConvertable {
     }
 
     @Override
-    public BaseModel toModel() {
+    public FilledSurveyModel toModel() {
         FilledSurveyModel filledSurvey = new FilledSurveyModel();
         filledSurvey.setId(id);
         filledSurvey.setInstanceId(instanceId);

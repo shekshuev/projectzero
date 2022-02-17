@@ -35,14 +35,13 @@ public class JwtService {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(jwtAccessTokenTtl).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
-        final String accessToken = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(account.getUserName())
                 .setExpiration(accessExpiration)
                 .signWith(SignatureAlgorithm.HS512, jwtAccessSecret)
                 .claim("role", account.getRole())
                 .claim("firstName", account.getFirstName())
                 .compact();
-        return accessToken;
     }
 
     public String generateRefreshToken(@NonNull AccountModel account) {

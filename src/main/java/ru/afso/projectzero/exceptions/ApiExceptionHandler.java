@@ -34,7 +34,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({EmptyResultDataAccessException.class, NoSuchElementException.class})
     public ResponseEntity<String> handleEmptyResultDataAccessException() {
-        return new ResponseEntity<>("No entity with such id!", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("No entity found!", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({AuthException.class, AccessDeniedException.class, JwtException.class})

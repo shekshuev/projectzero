@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,22 +23,23 @@ import ru.afso.projectzero.dto.SurveyDTO;
 import ru.afso.projectzero.entities.FilledSurveyEntity;
 import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
+import ru.afso.projectzero.models.FilledSurveyModel;
 import ru.afso.projectzero.models.ResponseListModel;
 import ru.afso.projectzero.models.SurveyModel;
 import ru.afso.projectzero.services.SurveyService;
-import ru.afso.projectzero.utils.BaseResponse;
-import ru.afso.projectzero.utils.SuccessResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/surveys")
 @Tag(name = "Surveys", description = "Surveys management API")
-@SecurityScheme(name = "Administrator", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP)
+@SecuritySchemes(value = {
+        @SecurityScheme(name = "Administrator", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP),
+        @SecurityScheme(name = "Interviewer", scheme = "bearer", bearerFormat = "JWT", type = SecuritySchemeType.HTTP)
+})
 public class SurveyController {
 
     private final SurveyService surveyService;
@@ -220,28 +222,80 @@ public class SurveyController {
 
 
 
+    @Operation(summary = "Get filled surveys",
+            description = "Returns all filled surveys with pagination",
+            security = @SecurityRequirement(name = "Administrator"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns total filled surveys count and filled surveys list"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated",
+                    content = @Content(schema = @Schema(implementation = Void.class)))
+    })
     @GetMapping("/filled")
     @PreAuthorize("hasAuthority('admin')")
-    public BaseResponse<HashMap<String, Object>> getFilledSurveys(
+    public ResponseEntity<ResponseListModel<FilledSurveyModel>> getFilledSurveys(
+            @Parameter(name = "count", in = ParameterIn.QUERY,
+                    description = "Filled surveys count to return, default is 5")
             @RequestParam(name="count") Optional<Integer> optionalCount,
+            @Parameter(name = "offset", in = ParameterIn.QUERY,
+                    description = "From which filled survey return, default is 0")
             @RequestParam(name="offset") Optional<Integer> optionalOffset
     ) {
         int count = optionalCount.orElse(5);
         int offset = optionalOffset.orElse(0);
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("total", surveyService.getTotalFilledSurveysCount());
-        map.put("filledSurveys", surveyService.getFilledSurveys(offset, count).stream().map(FilledSurveyEntity::toModel).collect(Collectors.toList()));
-        return new SuccessResponse<>(map);
+        return new ResponseEntity<>(new ResponseListModel<>(
+                surveyService.getTotalFilledSurveysCount(),
+                surveyService.getFilledSurveys(offset, count).stream()
+                        .map(FilledSurveyEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
     }
 
-    @GetMapping("/filled/{id}")
+
+
+
+    @Operation(summary = "Get filled survey by ID",
+            description = "Return filled survey by its ID",
+            security = @SecurityRequirement(name = "Administrator"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Return filled survey by its ID"),
+            @ApiResponse(responseCode = "401", description = "Not authenticated",
+                    content = @Content(schema = @Schema(implementation = Void.class))),
+            @ApiResponse(responseCode = "404", description = "Filled survey not found",
+                    content = @Content(schema = @Schema(implementation = Void.class)))
+    })
+    @GetMapping(value="/filled/{id}", produces = {"application/json"})
     @PreAuthorize("hasAuthority('admin')")
-    public BaseResponse<?> getFilledSurvey(@PathVariable long id) {
-        return new SuccessResponse<>(surveyService.getFilledSurveyById(id).toModel());
+    public ResponseEntity<FilledSurveyModel> getFilledSurvey(
+            @Parameter(name = "id", in = ParameterIn.PATH, description = "Filled survey id")
+            @PathVariable long id
+    ) {
+        return new ResponseEntity<>(surveyService.getFilledSurveyById(id).toModel(), HttpStatus.OK);
     }
 
+
+
+    @Operation(summary = "Create filled survey",
+            description = "Creates new filled survey",
+            security = {
+                    @SecurityRequirement(name = "Administrator"),
+                    @SecurityRequirement(name = "Interviewer")
+            })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Returns empty body if filled survey was created", headers = {
+                    @Header(name = "Location", description = "Contains survey location URI")
+            }),
+            @ApiResponse(responseCode = "400", description = "Other error",
+                    content = @Content(schema = @Schema(implementation = String.class, description = "Error message"))),
+            @ApiResponse(responseCode = "401", description = "Not authenticated",
+                    content = @Content(schema = @Schema(implementation = Void.class)))
+    })
     @PostMapping(value="/filled", consumes = { "application/json" })
-    public BaseResponse<?> createFilledSurvey(@Valid @RequestBody FilledSurveyDTO filledSurveyDTO) {
-        return new SuccessResponse<>(surveyService.createFilledSurvey(new FilledSurveyEntity(filledSurveyDTO)).toModel());
+    @PreAuthorize("hasAnyAuthority('admin','interviewer')")
+    public ResponseEntity<Void> createFilledSurvey(
+            @Parameter(in = ParameterIn.DEFAULT, description = "Filled survey to add. Cannot be null or empty",
+                    required = true, schema = @Schema(implementation = FilledSurveyDTO.class))
+            @Valid @RequestBody FilledSurveyDTO filledSurveyDTO
+    ) {
+        FilledSurveyModel model = surveyService.createFilledSurvey(new FilledSurveyEntity(filledSurveyDTO)).toModel();
+        URI location = URI.create(String.format("/surveys/filled/%d", model.getId()));
+        return ResponseEntity.created(location).build();
     }
 }
