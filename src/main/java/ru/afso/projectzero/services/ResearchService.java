@@ -6,6 +6,7 @@ import ru.afso.projectzero.entities.ResearchEntity;
 import ru.afso.projectzero.repositories.ResearchRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -25,7 +26,7 @@ public class ResearchService {
     }
 
     public ResearchEntity getResearchById(long id) {
-        return researchRepository.findById(id).orElseThrow();
+        return researchRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public ResearchEntity createResearch(ResearchEntity research) {

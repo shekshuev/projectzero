@@ -7,6 +7,7 @@ import ru.afso.projectzero.models.AccountModel;
 import ru.afso.projectzero.repositories.AccountRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -26,11 +27,11 @@ public class AccountService {
     }
 
     public AccountEntity getAccountByUsername(String username) {
-        return accountRepository.findByUserName(username).orElseThrow();
+        return accountRepository.findByUserName(username).orElseThrow(NoSuchElementException::new);
     }
 
     public AccountEntity getAccountById(long id) {
-        return accountRepository.findById(id).orElseThrow();
+        return accountRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public AccountEntity createAccount(AccountEntity account) {

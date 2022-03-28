@@ -11,6 +11,7 @@ import ru.afso.projectzero.repositories.QuestionRepository;
 import ru.afso.projectzero.repositories.SurveyRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -36,7 +37,7 @@ public class SurveyService {
     }
 
     public SurveyEntity getSurveyById(long id) {
-        return surveyRepository.findById(id).orElseThrow();
+        return surveyRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public SurveyEntity createSurvey(SurveyEntity survey) {
@@ -80,7 +81,7 @@ public class SurveyService {
     }
 
     public FilledSurveyEntity getFilledSurveyById(long id) {
-        return filledSurveyRepository.findById(id).orElseThrow();
+        return filledSurveyRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public FilledSurveyEntity createFilledSurvey(FilledSurveyEntity filledSurvey) {
