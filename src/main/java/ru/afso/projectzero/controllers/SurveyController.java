@@ -89,7 +89,7 @@ public class SurveyController {
         } else {
             return new ResponseEntity<>(new ResponseListModel<>(
                     surveyService.getTotalSurveysCount(),
-                    surveyService.getSurveys(offset, count).stream()
+                    surveyService.getSurveysByLocation(latitude.orElseThrow(), longitude.orElseThrow()).stream()
                             .map(SurveyEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
         }
     }
@@ -113,14 +113,21 @@ public class SurveyController {
     @PreAuthorize("hasAnyAuthority('admin','interviewer')")
     public ResponseEntity<SurveyModel> getSurvey(
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Survey id")
-            @PathVariable long id
+            @PathVariable long id,
+            @Parameter(name = "latitude", in = ParameterIn.HEADER,
+                    description = "Current user's latitude")
+            @RequestHeader(name="latitude") Optional<Double> latitude,
+            @Parameter(name = "latitude", in = ParameterIn.HEADER,
+                    description = "Current user's longitude")
+            @RequestHeader(name="longitude") Optional<Double> longitude
     ) {
         Object principal =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof AccountInfoModel &&
                 ((AccountInfoModel) principal).getRoles().contains(new RoleModel("admin"))){
             return new ResponseEntity<>(surveyService.getSurveyById(id).toExtendedModel(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(surveyService.getSurveyById(id).toModel(), HttpStatus.OK);
+            return new ResponseEntity<>(surveyService.getSurveyByIdAndLocation(id, latitude.orElseThrow(),
+                    longitude.orElseThrow()).toModel(), HttpStatus.OK);
         }
     }
 

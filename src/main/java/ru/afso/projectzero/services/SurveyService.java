@@ -1,5 +1,8 @@
 package ru.afso.projectzero.services;
 
+import com.mapbox.geojson.Point;
+import com.mapbox.geojson.Polygon;
+import com.mapbox.turf.TurfJoins;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.afso.projectzero.dto.SurveyDTO;
@@ -36,8 +39,40 @@ public class SurveyService {
                 .skip(offset).limit(count).collect(Collectors.toList());
     }
 
-    public List<SurveyEntity> getSurveysByLocation(int offset, int count) {
-        return null;
+    public List<SurveyEntity> getSurveysByLocation(double latitude, double longitude) {
+        Point p = Point.fromLngLat(longitude, latitude);
+        return StreamSupport.stream(surveyRepository.findAll().spliterator(), false)
+                .filter(s -> {
+                    if (s.getArea().features() != null) {
+                        return s.getArea().features().stream().anyMatch(f -> {
+                            if (f.geometry() != null) {
+                                return TurfJoins.inside(p, (Polygon) f.geometry());
+                            } else {
+                                return false;
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                }).collect(Collectors.toList());
+    }
+
+    public SurveyEntity getSurveyByIdAndLocation(long id, double latitude, double longitude) {
+        Point p = Point.fromLngLat(longitude, latitude);
+        SurveyEntity entity = surveyRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        if (entity.getArea().features() != null) {
+            boolean flag = entity.getArea().features().stream().anyMatch(f -> {
+                if (f.geometry() != null) {
+                    return TurfJoins.inside(p, (Polygon) f.geometry());
+                } else {
+                    return false;
+                }
+            });
+            if (flag) {
+                return entity;
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     public SurveyEntity getSurveyById(long id) {
