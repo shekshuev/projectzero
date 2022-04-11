@@ -1,7 +1,11 @@
 package ru.afso.projectzero.entities;
 
+import com.mapbox.geojson.FeatureCollection;
+import ru.afso.projectzero.converters.FeatureCollectionConverter;
 import ru.afso.projectzero.dto.SurveyDTO;
+import ru.afso.projectzero.models.ExtendedSurveyModel;
 import ru.afso.projectzero.models.SurveyModel;
+import ru.afso.projectzero.models.geojson.FeatureCollectionModel;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -42,17 +46,21 @@ public class SurveyEntity implements ModelConvertable {
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
     private List<FilledSurveyEntity> filledSurveys;
 
-
+    @Convert(converter = FeatureCollectionConverter.class)
+    @Column(columnDefinition = "json")
+    private FeatureCollection area;
 
     public SurveyEntity() {}
 
     public SurveyEntity(SurveyDTO surveyDTO) {
+
         beginDate = surveyDTO.getBeginDate();
         endDate = surveyDTO.getEndDate();
         title = surveyDTO.getTitle();
         description = surveyDTO.getDescription();
         researchId = surveyDTO.getResearchId();
         createdAt = new Date();
+        area = FeatureCollection.fromJson(surveyDTO.getArea().toString());
     }
 
 
@@ -121,6 +129,14 @@ public class SurveyEntity implements ModelConvertable {
         this.research = research;
     }
 
+    public FeatureCollection getArea() {
+        return area;
+    }
+
+    public void setArea(FeatureCollection area) {
+        this.area = area;
+    }
+
     public void addQuestion(QuestionEntity question) {
         if (questions == null) {
             questions = new ArrayList<>();
@@ -145,5 +161,21 @@ public class SurveyEntity implements ModelConvertable {
             survey.setQuestions(questions.stream().map(QuestionEntity::toModel).collect(Collectors.toList()));
         }
         return survey;
+    }
+
+    public ExtendedSurveyModel toExtendedModel() {
+        ExtendedSurveyModel surveyModel = new ExtendedSurveyModel();
+        surveyModel.setId(id);
+        surveyModel.setBeginDate(beginDate);
+        surveyModel.setEndDate(endDate);
+        surveyModel.setTitle(title);
+        surveyModel.setDescription(description);
+        if (questions != null) {
+            surveyModel.setQuestions(questions.stream().map(QuestionEntity::toModel).collect(Collectors.toList()));
+        }
+        if (area != null) {
+            surveyModel.setArea(FeatureCollectionModel.fromMapBoxFeatureCollection(area));
+        }
+        return surveyModel;
     }
 }

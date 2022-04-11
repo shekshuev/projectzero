@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.FilledSurveyDTO;
 import ru.afso.projectzero.dto.QuestionDTO;
@@ -23,9 +24,7 @@ import ru.afso.projectzero.dto.SurveyDTO;
 import ru.afso.projectzero.entities.FilledSurveyEntity;
 import ru.afso.projectzero.entities.QuestionEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
-import ru.afso.projectzero.models.FilledSurveyModel;
-import ru.afso.projectzero.models.ResponseListModel;
-import ru.afso.projectzero.models.SurveyModel;
+import ru.afso.projectzero.models.*;
 import ru.afso.projectzero.services.SurveyService;
 
 import javax.validation.Valid;
@@ -65,6 +64,12 @@ public class SurveyController {
     @GetMapping(produces = {"application/json"})
     @PreAuthorize("hasAnyAuthority('admin','interviewer')")
     public ResponseEntity<ResponseListModel<SurveyModel>> getSurveys(
+            @Parameter(name = "latitude", in = ParameterIn.HEADER,
+                    description = "Current user's latitude")
+            @RequestHeader(name="latitude") Optional<Double> latitude,
+            @Parameter(name = "latitude", in = ParameterIn.HEADER,
+                    description = "Current user's longitude")
+            @RequestHeader(name="longitude") Optional<Double> longitude,
             @Parameter(name = "count", in = ParameterIn.QUERY,
                     description = "Surveys count to return, default is 5")
             @RequestParam(name="count") Optional<Integer> optionalCount,
@@ -74,10 +79,19 @@ public class SurveyController {
     ) {
         int count = optionalCount.orElse(5);
         int offset = optionalOffset.orElse(0);
-        return new ResponseEntity<>(new ResponseListModel<>(
-                surveyService.getTotalSurveysCount(),
-                surveyService.getSurveys(offset, count).stream()
-                        .map(SurveyEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
+        Object principal =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof AccountInfoModel &&
+                ((AccountInfoModel) principal).getRoles().contains(new RoleModel("admin"))) {
+            return new ResponseEntity<>(new ResponseListModel<>(
+                    surveyService.getTotalSurveysCount(),
+                    surveyService.getSurveys(offset, count).stream()
+                            .map(SurveyEntity::toExtendedModel).collect(Collectors.toList())), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseListModel<>(
+                    surveyService.getTotalSurveysCount(),
+                    surveyService.getSurveys(offset, count).stream()
+                            .map(SurveyEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
+        }
     }
 
 
@@ -101,7 +115,13 @@ public class SurveyController {
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Survey id")
             @PathVariable long id
     ) {
-        return new ResponseEntity<>(surveyService.getSurveyById(id).toModel(), HttpStatus.OK);
+        Object principal =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof AccountInfoModel &&
+                ((AccountInfoModel) principal).getRoles().contains(new RoleModel("admin"))){
+            return new ResponseEntity<>(surveyService.getSurveyById(id).toExtendedModel(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(surveyService.getSurveyById(id).toModel(), HttpStatus.OK);
+        }
     }
 
 

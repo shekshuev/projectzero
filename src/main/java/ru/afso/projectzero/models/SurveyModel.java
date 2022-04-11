@@ -16,6 +16,8 @@ public class SurveyModel extends BaseModel {
 
     private List<? extends BaseModel> questions;
 
+
+
     public Date getBeginDate() {
         return beginDate;
     }
@@ -55,4 +57,5 @@ public class SurveyModel extends BaseModel {
     public void setQuestions(List<? extends BaseModel> questions) {
         this.questions = questions;
     }
+
 }

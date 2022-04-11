@@ -20,6 +20,9 @@ public class SurveyDTO {
     @NotNull(message = "Research id is required")
     private long researchId;
 
+    @NotNull(message = "Area is required")
+    private FeatureCollectionDTO area;
+
 
 
     public Date getBeginDate() {
@@ -61,4 +64,13 @@ public class SurveyDTO {
     public void setResearchId(long researchId) {
         this.researchId = researchId;
     }
+
+    public FeatureCollectionDTO getArea() {
+        return area;
+    }
+
+    public void setArea(FeatureCollectionDTO area) {
+        this.area = area;
+    }
+
 }

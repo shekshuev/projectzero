@@ -36,6 +36,10 @@ public class SurveyService {
                 .skip(offset).limit(count).collect(Collectors.toList());
     }
 
+    public List<SurveyEntity> getSurveysByLocation(int offset, int count) {
+        return null;
+    }
+
     public SurveyEntity getSurveyById(long id) {
         return surveyRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
