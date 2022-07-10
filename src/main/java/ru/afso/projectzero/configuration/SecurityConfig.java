@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .anyRequest().authenticated()
                 .and()
                 .addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
+                .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .and().cors();
     }
 
     @Override
