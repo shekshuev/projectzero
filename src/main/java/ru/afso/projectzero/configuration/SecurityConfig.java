@@ -55,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("*")
-                .allowedHeaders("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization");
+                .allowedHeaders("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization")
+                .exposedHeaders("Location");
     }
 
 }
