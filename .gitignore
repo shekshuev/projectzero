@@ -31,3 +31,5 @@ target/*
 .mvn/*
 
 .DS_Store
+/.env.local
+/.env.remote
