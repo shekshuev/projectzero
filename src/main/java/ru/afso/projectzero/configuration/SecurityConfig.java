@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .anyRequest().authenticated()
                 .and()
                 .addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
+                .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .and().cors();
     }
 
     @Override
@@ -54,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("*")
-                .allowedHeaders("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization");
+                .allowedHeaders("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization")
+                .exposedHeaders("Location");
     }
 
 }

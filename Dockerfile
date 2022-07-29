@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-alpine
+FROM --platform=linux/amd64 openjdk:17-jdk-alpine
 
 ENV SPRING_DATASOURCE_URL=jdbc:h2:file:~/database.db
 ENV SPRING_DATASOURCE_USERNAME=projectzero
