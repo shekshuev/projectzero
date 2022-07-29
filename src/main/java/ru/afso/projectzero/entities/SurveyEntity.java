@@ -36,13 +36,6 @@ public class SurveyEntity implements ModelConvertable {
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
     private List<QuestionEntity> questions;
 
-    @ManyToOne
-    @JoinColumn(name = "research_id", insertable = false, updatable = false)
-    private ResearchEntity research;
-
-    @Column(name = "research_id")
-    private long researchId;
-
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
     private List<FilledSurveyEntity> filledSurveys;
 
@@ -57,7 +50,6 @@ public class SurveyEntity implements ModelConvertable {
         endDate = surveyDTO.getEndDate();
         title = surveyDTO.getTitle();
         description = surveyDTO.getDescription();
-        researchId = surveyDTO.getResearchId();
         createdAt = new Date();
         area = FeatureCollection.fromJson(surveyDTO.getArea().toString());
         questions = surveyDTO.getQuestions().stream()
@@ -124,14 +116,6 @@ public class SurveyEntity implements ModelConvertable {
 
     public void setQuestions(List<QuestionEntity> questions) {
         this.questions = questions;
-    }
-
-    public ResearchEntity getResearch() {
-        return research;
-    }
-
-    public void setResearch(ResearchEntity research) {
-        this.research = research;
     }
 
     public FeatureCollection getArea() {

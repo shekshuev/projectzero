@@ -18,9 +18,6 @@ public class SurveyDTO {
 
     private String description;
 
-    @NotNull(message = "Research id is required")
-    private long researchId;
-
     @NotNull(message = "Area is required")
     private FeatureCollectionDTO area;
     
@@ -58,14 +55,6 @@ public class SurveyDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public long getResearchId() {
-        return researchId;
-    }
-
-    public void setResearchId(long researchId) {
-        this.researchId = researchId;
     }
 
     public FeatureCollectionDTO getArea() {
