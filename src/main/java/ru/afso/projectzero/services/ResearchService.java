@@ -2,7 +2,10 @@ package ru.afso.projectzero.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import ru.afso.projectzero.dto.ResearchDTO;
 import ru.afso.projectzero.entities.ResearchEntity;
+import ru.afso.projectzero.models.ResearchModel;
 import ru.afso.projectzero.repositories.ResearchRepository;
 
 import java.util.List;
@@ -20,21 +23,25 @@ public class ResearchService {
         this.researchRepository = researchRepository;
     }
 
-    public List<ResearchEntity> getResearches(int offset, int count) {
+    public List<ResearchModel> getResearches(int offset, int count) {
         return StreamSupport.stream(researchRepository.findAll().spliterator(), false)
+        		.map(ResearchEntity::toModel)
                 .skip(offset).limit(count).collect(Collectors.toList());
     }
 
-    public ResearchEntity getResearchById(long id) {
-        return researchRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    public ResearchModel getResearchById(long id) {
+        return researchRepository.findById(id).orElseThrow(NoSuchElementException::new).toModel();
     }
 
-    public ResearchEntity createResearch(ResearchEntity research) {
-        return researchRepository.save(research);
+    public ResearchModel createResearch(ResearchDTO researchDTO) {
+    	ResearchEntity research = new ResearchEntity(researchDTO);
+        return researchRepository.save(research).toModel();
     }
 
-    public ResearchEntity updateResearch(ResearchEntity research) {
-        return researchRepository.save(research);
+    public ResearchModel updateResearch(long id, ResearchDTO researchDTO) {
+    	ResearchEntity research = new ResearchEntity(researchDTO);
+    	research.setId(id);
+        return researchRepository.save(research).toModel();
     }
 
     public void deleteResearchById(long id) {

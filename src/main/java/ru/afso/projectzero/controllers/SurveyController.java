@@ -21,16 +21,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.FilledSurveyDTO;
 import ru.afso.projectzero.dto.QuestionDTO;
 import ru.afso.projectzero.dto.SurveyDTO;
-import ru.afso.projectzero.entities.FilledSurveyEntity;
-import ru.afso.projectzero.entities.QuestionEntity;
-import ru.afso.projectzero.entities.SurveyEntity;
 import ru.afso.projectzero.models.*;
 import ru.afso.projectzero.services.SurveyService;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/surveys")
@@ -84,13 +80,11 @@ public class SurveyController {
                 ((AccountInfoModel) principal).getRoles().contains(new RoleModel("admin"))) {
             return new ResponseEntity<>(new ResponseListModel<>(
                     surveyService.getTotalSurveysCount(),
-                    surveyService.getSurveys(offset, count).stream()
-                            .map(SurveyEntity::toExtendedModel).collect(Collectors.toList())), HttpStatus.OK);
+                    surveyService.getSurveys(offset, count)), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new ResponseListModel<>(
                     surveyService.getTotalSurveysCount(),
-                    surveyService.getSurveysByLocation(latitude.orElseThrow(), longitude.orElseThrow()).stream()
-                            .map(SurveyEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
+                    surveyService.getSurveysByLocation(latitude.orElseThrow(), longitude.orElseThrow())), HttpStatus.OK);
         }
     }
 
@@ -124,10 +118,10 @@ public class SurveyController {
         Object principal =  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof AccountInfoModel &&
                 ((AccountInfoModel) principal).getRoles().contains(new RoleModel("admin"))){
-            return new ResponseEntity<>(surveyService.getSurveyById(id).toExtendedModel(), HttpStatus.OK);
+            return new ResponseEntity<>(surveyService.getSurveyById(id), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(surveyService.getSurveyByIdAndLocation(id, latitude.orElseThrow(),
-                    longitude.orElseThrow()).toModel(), HttpStatus.OK);
+                    longitude.orElseThrow()), HttpStatus.OK);
         }
     }
 
@@ -152,7 +146,7 @@ public class SurveyController {
                     required = true, schema = @Schema(implementation = SurveyDTO.class))
             @Valid @RequestBody SurveyDTO surveyDTO
     ) {
-        SurveyModel model = surveyService.createSurvey(new SurveyEntity(surveyDTO)).toModel();
+        SurveyModel model = surveyService.createSurvey(surveyDTO);
         URI location = URI.create(String.format("/surveys/%d", model.getId()));
         return ResponseEntity.created(location).build();
     }
@@ -180,7 +174,7 @@ public class SurveyController {
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Survey id")
             @PathVariable long id
     ) {
-        surveyService.updateSurvey(surveyService.getSurveyById(id), surveyDTO);
+        surveyService.updateSurvey(id, surveyDTO);
         return ResponseEntity.noContent().build();
     }
 
@@ -207,7 +201,7 @@ public class SurveyController {
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Survey id")
             @PathVariable long id
     ) {
-        surveyService.addQuestion(surveyService.getSurveyById(id), new QuestionEntity(questionDTO));
+        surveyService.addQuestion(id, questionDTO);
         return ResponseEntity.noContent().build();
     }
 
@@ -279,8 +273,7 @@ public class SurveyController {
         int offset = optionalOffset.orElse(0);
         return new ResponseEntity<>(new ResponseListModel<>(
                 surveyService.getTotalFilledSurveysCount(),
-                surveyService.getFilledSurveys(offset, count).stream()
-                        .map(FilledSurveyEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
+                surveyService.getFilledSurveys(offset, count)), HttpStatus.OK);
     }
 
 
@@ -302,7 +295,7 @@ public class SurveyController {
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Filled survey id")
             @PathVariable long id
     ) {
-        return new ResponseEntity<>(surveyService.getFilledSurveyById(id).toModel(), HttpStatus.OK);
+        return new ResponseEntity<>(surveyService.getFilledSurveyById(id), HttpStatus.OK);
     }
 
 
@@ -329,7 +322,7 @@ public class SurveyController {
                     required = true, schema = @Schema(implementation = FilledSurveyDTO.class))
             @Valid @RequestBody FilledSurveyDTO filledSurveyDTO
     ) {
-        FilledSurveyModel model = surveyService.createFilledSurvey(new FilledSurveyEntity(filledSurveyDTO)).toModel();
+        FilledSurveyModel model = surveyService.createFilledSurvey(filledSurveyDTO);
         URI location = URI.create(String.format("/surveys/filled/%d", model.getId()));
         return ResponseEntity.created(location).build();
     }

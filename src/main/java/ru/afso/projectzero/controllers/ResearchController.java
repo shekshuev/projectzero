@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.ResearchDTO;
-import ru.afso.projectzero.entities.ResearchEntity;
 import ru.afso.projectzero.models.ResearchModel;
 import ru.afso.projectzero.models.ResponseListModel;
 import ru.afso.projectzero.services.ResearchService;
@@ -25,7 +24,6 @@ import ru.afso.projectzero.services.ResearchService;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/researches")
@@ -64,8 +62,7 @@ public class ResearchController {
         int offset = optionalOffset.orElse(0);
         return new ResponseEntity<>(new ResponseListModel<>(
                 researchService.getTotalResearchCount(),
-                researchService.getResearches(offset, count).stream()
-                        .map(ResearchEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
+                researchService.getResearches(offset, count)), HttpStatus.OK);
     }
 
 
@@ -86,7 +83,7 @@ public class ResearchController {
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Research id")
             @PathVariable long id
     ) {
-        return new ResponseEntity<>(researchService.getResearchById(id).toModel(), HttpStatus.OK);
+        return new ResponseEntity<>(researchService.getResearchById(id), HttpStatus.OK);
     }
 
 
@@ -110,7 +107,7 @@ public class ResearchController {
                     required = true, schema = @Schema(implementation = ResearchDTO.class))
             @Valid @RequestBody ResearchDTO researchDTO
     ) {
-        ResearchModel model = researchService.createResearch(new ResearchEntity(researchDTO)).toModel();
+        ResearchModel model = researchService.createResearch(researchDTO);
         URI location = URI.create(String.format("/researches/%d", model.getId()));
         return ResponseEntity.created(location).build();
     }
@@ -138,9 +135,7 @@ public class ResearchController {
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Research id")
             @PathVariable long id
     ) {
-        ResearchEntity research = new ResearchEntity(researchDTO);
-        research.setId(id);
-        researchService.updateResearch(research);
+        researchService.updateResearch(id, researchDTO);
         return ResponseEntity.noContent().build();
     }
 

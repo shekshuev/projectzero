@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.afso.projectzero.dto.AccountDTO;
-import ru.afso.projectzero.entities.AccountEntity;
 import ru.afso.projectzero.models.AccountModel;
 import ru.afso.projectzero.models.ResponseListModel;
 import ru.afso.projectzero.services.AccountService;
@@ -26,7 +25,6 @@ import ru.afso.projectzero.services.AccountService;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/accounts")
@@ -63,8 +61,7 @@ public class AccountController {
         int offset = optionalOffset.orElse(0);
         return new ResponseEntity<>(new ResponseListModel<>(
                 accountService.getTotalAccountsCount(),
-                accountService.getAccounts(offset, count)
-                        .stream().map(AccountEntity::toModel).collect(Collectors.toList())), HttpStatus.OK);
+                accountService.getAccounts(offset, count)), HttpStatus.OK);
     }
 
 
@@ -85,7 +82,7 @@ public class AccountController {
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Account id")
             @PathVariable long id
     ) {
-        return new ResponseEntity<>(accountService.getAccountById(id).toModel(), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.getAccountById(id), HttpStatus.OK);
     }
 
 
@@ -109,7 +106,7 @@ public class AccountController {
                     required = true, schema = @Schema(implementation = AccountDTO.class))
             @Valid @RequestBody AccountDTO accountDTO
     ) {
-        AccountModel model = accountService.createAccount(new AccountEntity(accountDTO)).toModel();
+        AccountModel model = accountService.createAccount(accountDTO);
         URI location = URI.create(String.format("/accounts/%d", model.getId()));
         return ResponseEntity.created(location).build();
     }
@@ -137,9 +134,7 @@ public class AccountController {
             @Parameter(name = "id", in = ParameterIn.PATH, description = "Account id")
             @PathVariable long id
     ) {
-        AccountEntity account = new AccountEntity(accountDTO);
-        account.setId(id);
-        accountService.updateAccount(account);
+        accountService.updateAccount(id, accountDTO);
         return ResponseEntity.noContent().build();
     }
 

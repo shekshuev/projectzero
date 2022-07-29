@@ -4,7 +4,7 @@ public class AnswerModel extends BaseModel {
 
     private String text;
 
-    private int code;
+    private String code;
 
     public String getText() {
         return text;
@@ -14,11 +14,11 @@ public class AnswerModel extends BaseModel {
         this.text = text;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 

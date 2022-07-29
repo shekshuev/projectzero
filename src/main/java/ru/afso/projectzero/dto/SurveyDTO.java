@@ -3,6 +3,7 @@ package ru.afso.projectzero.dto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 
 public class SurveyDTO {
 
@@ -22,6 +23,8 @@ public class SurveyDTO {
 
     @NotNull(message = "Area is required")
     private FeatureCollectionDTO area;
+    
+    private List<QuestionDTO> questions;
 
 
 
@@ -72,5 +75,13 @@ public class SurveyDTO {
     public void setArea(FeatureCollectionDTO area) {
         this.area = area;
     }
+
+	public List<QuestionDTO> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(List<QuestionDTO> questions) {
+		this.questions = questions;
+	}
 
 }

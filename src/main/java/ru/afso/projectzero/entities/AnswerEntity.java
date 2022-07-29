@@ -1,5 +1,6 @@
 package ru.afso.projectzero.entities;
 
+import ru.afso.projectzero.dto.AnswerDTO;
 import ru.afso.projectzero.models.AnswerModel;
 import ru.afso.projectzero.models.BaseModel;
 
@@ -17,7 +18,7 @@ public class AnswerEntity implements ModelConvertable {
     @Column(nullable = false)
     private String text;
 
-    private int code;
+    private String code;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
@@ -27,6 +28,13 @@ public class AnswerEntity implements ModelConvertable {
     public List<FilledQuestionEntity> filledQuestions;
 
     public AnswerEntity() {}
+    
+    public static AnswerEntity fromDTO(AnswerDTO answerDTO) {
+    	AnswerEntity answer = new AnswerEntity();
+    	answer.setText(answerDTO.getText());
+    	answer.setCode(answerDTO.getCode());
+    	return answer;
+    }
 
     public Long getId() {
         return id;
@@ -44,11 +52,11 @@ public class AnswerEntity implements ModelConvertable {
         this.text = text;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 

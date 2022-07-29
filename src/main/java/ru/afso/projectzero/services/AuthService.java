@@ -26,7 +26,7 @@ public class AuthService {
 
     public TokenResponseModel login(@NonNull JwtRequestDTO jwtRequestDTO) throws AuthException {
         try {
-            final AccountEntity account = accountService.getAccountByUsername(jwtRequestDTO.getLogin());
+            final AccountEntity account = accountService.getAccountEntityByUsername(jwtRequestDTO.getLogin());
             if (new BCryptPasswordEncoder().matches(jwtRequestDTO.getPassword(), account.getPasswordHash())) {
                 final String accessToken = jwtService.generateAccessToken(account.toModel());
                 final String refreshToken = jwtService.generateRefreshToken(account.toModel());
@@ -43,7 +43,7 @@ public class AuthService {
         if (jwtService.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtService.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
-            final AccountEntity account = accountService.getAccountByUsername(login);
+            final AccountEntity account = accountService.getAccountEntityByUsername(login);
             final String accessToken = jwtService.generateAccessToken(account.toModel());
             final String newRefreshToken = jwtService.generateRefreshToken(account.toModel());
             return new TokenResponseModel(accessToken, newRefreshToken);

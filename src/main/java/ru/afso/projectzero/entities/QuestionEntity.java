@@ -40,7 +40,7 @@ public class QuestionEntity implements ModelConvertable{
     public QuestionEntity(QuestionDTO questionDTO) {
         title = questionDTO.getTitle();
         type = questionDTO.getType();
-        answers = questionDTO.getAnswers();
+        answers = questionDTO.getAnswers().stream().map(AnswerEntity::fromDTO).collect(Collectors.toList());
         required = questionDTO.isRequired();
     }
 

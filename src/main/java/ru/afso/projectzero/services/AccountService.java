@@ -2,6 +2,8 @@ package ru.afso.projectzero.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import ru.afso.projectzero.dto.AccountDTO;
 import ru.afso.projectzero.entities.AccountEntity;
 import ru.afso.projectzero.models.AccountModel;
 import ru.afso.projectzero.repositories.AccountRepository;
@@ -21,25 +23,32 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public List<AccountEntity> getAccounts(int offset, int count) {
+    public List<AccountModel> getAccounts(int offset, int count) {
         return StreamSupport.stream(accountRepository.findAll().spliterator(), false)
-                .skip(offset).limit(count).collect(Collectors.toList());
+                .skip(offset).limit(count).map(AccountEntity::toModel).collect(Collectors.toList());
     }
 
-    public AccountEntity getAccountByUsername(String username) {
-        return accountRepository.findByUserName(username).orElseThrow(NoSuchElementException::new);
+    public AccountModel getAccountByUsername(String username) {
+        return accountRepository.findByUserName(username).orElseThrow(NoSuchElementException::new).toModel();
+    }
+    
+    public AccountEntity getAccountEntityByUsername(String username) {
+    	return accountRepository.findByUserName(username).orElseThrow(NoSuchElementException::new);
     }
 
-    public AccountEntity getAccountById(long id) {
-        return accountRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    public AccountModel getAccountById(long id) {
+        return accountRepository.findById(id).orElseThrow(NoSuchElementException::new).toModel();
     }
 
-    public AccountEntity createAccount(AccountEntity account) {
-        return accountRepository.save(account);
+    public AccountModel createAccount(AccountDTO accountDTO) {
+    	AccountEntity account = new AccountEntity(accountDTO);
+        return accountRepository.save(account).toModel();
     }
 
-    public AccountEntity updateAccount(AccountEntity account) {
-        return accountRepository.save(account);
+    public AccountModel updateAccount(long id, AccountDTO accountDTO) {
+    	AccountEntity account = new AccountEntity(accountDTO);
+    	account.setId(id);
+        return accountRepository.save(account).toModel();
     }
 
     public void deleteAccountById(long id) {

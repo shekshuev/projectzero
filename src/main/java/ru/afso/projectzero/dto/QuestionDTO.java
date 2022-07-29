@@ -1,7 +1,5 @@
 package ru.afso.projectzero.dto;
 
-import ru.afso.projectzero.entities.AnswerEntity;
-
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -13,7 +11,7 @@ public class QuestionDTO {
     @NotBlank(message = "Type is required")
     private String type;
 
-    private List<AnswerEntity> answers;
+    private List<AnswerDTO> answers;
 
     private boolean required;
 
@@ -34,11 +32,11 @@ public class QuestionDTO {
         this.type = type;
     }
 
-    public List<AnswerEntity> getAnswers() {
+    public List<AnswerDTO> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<AnswerEntity> answers) {
+    public void setAnswers(List<AnswerDTO> answers) {
         this.answers = answers;
     }
 
