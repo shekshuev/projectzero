@@ -53,7 +53,6 @@ public class SurveyEntity implements ModelConvertable {
     public SurveyEntity() {}
 
     public SurveyEntity(SurveyDTO surveyDTO) {
-
         beginDate = surveyDTO.getBeginDate();
         endDate = surveyDTO.getEndDate();
         title = surveyDTO.getTitle();
@@ -61,6 +60,12 @@ public class SurveyEntity implements ModelConvertable {
         researchId = surveyDTO.getResearchId();
         createdAt = new Date();
         area = FeatureCollection.fromJson(surveyDTO.getArea().toString());
+        questions = surveyDTO.getQuestions().stream()
+        		.map(QuestionEntity::fromDTO)
+        		.map(question -> {
+        			question.setSurvey(this);
+        			return question;
+        			}).collect(Collectors.toList());
     }
 
 
