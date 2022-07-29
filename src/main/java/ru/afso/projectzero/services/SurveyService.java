@@ -3,6 +3,8 @@ package ru.afso.projectzero.services;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.turf.TurfJoins;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +31,17 @@ public class SurveyService {
     private final SurveyRepository surveyRepository;
     private final QuestionRepository questionRepository;
     private final FilledSurveyRepository filledSurveyRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public SurveyService(SurveyRepository surveyRepository,
                          QuestionRepository questionRepository,
-                         FilledSurveyRepository filledSurveyRepository) {
+                         FilledSurveyRepository filledSurveyRepository, 
+                         ModelMapper modelMapper) {
         this.surveyRepository = surveyRepository;
         this.questionRepository = questionRepository;
         this.filledSurveyRepository = filledSurveyRepository;
+        this.modelMapper = modelMapper;
     }
 
     public List<SurveyModel> getSurveys(int offset, int count) {
@@ -76,6 +81,7 @@ public class SurveyService {
             });
             if (flag) {
                 return entity.toModel();
+//            	return modelMapper.map(entity, SurveyModel.class);
             }
         }
         throw new NoSuchElementException();

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import ru.afso.projectzero.models.AccountModel;
+import ru.afso.projectzero.entities.AccountEntity;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -31,7 +31,7 @@ public class JwtService {
         this.jwtRefreshTokenTtl = jwtRefreshTokenTtl;
     }
 
-    public String generateAccessToken(@NonNull AccountModel account) {
+    public String generateAccessToken(@NonNull AccountEntity account) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(jwtAccessTokenTtl).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
@@ -44,7 +44,7 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateRefreshToken(@NonNull AccountModel account) {
+    public String generateRefreshToken(@NonNull AccountEntity account) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(jwtRefreshTokenTtl).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);

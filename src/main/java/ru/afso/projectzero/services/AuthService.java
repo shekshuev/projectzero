@@ -28,8 +28,8 @@ public class AuthService {
         try {
             final AccountEntity account = accountService.getAccountEntityByUsername(jwtRequestDTO.getLogin());
             if (new BCryptPasswordEncoder().matches(jwtRequestDTO.getPassword(), account.getPasswordHash())) {
-                final String accessToken = jwtService.generateAccessToken(account.toModel());
-                final String refreshToken = jwtService.generateRefreshToken(account.toModel());
+                final String accessToken = jwtService.generateAccessToken(account);
+                final String refreshToken = jwtService.generateRefreshToken(account);
                 return new TokenResponseModel(accessToken, refreshToken);
             } else {
                 throw new AuthException("Wrong password!");
@@ -44,8 +44,8 @@ public class AuthService {
             final Claims claims = jwtService.getRefreshClaims(refreshToken);
             final String login = claims.getSubject();
             final AccountEntity account = accountService.getAccountEntityByUsername(login);
-            final String accessToken = jwtService.generateAccessToken(account.toModel());
-            final String newRefreshToken = jwtService.generateRefreshToken(account.toModel());
+            final String accessToken = jwtService.generateAccessToken(account);
+            final String newRefreshToken = jwtService.generateRefreshToken(account);
             return new TokenResponseModel(accessToken, newRefreshToken);
         }
         throw new AuthException("JWT token isn't valid!");
