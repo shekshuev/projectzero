@@ -1,8 +1,6 @@
 package ru.afso.projectzero.converters;
 
-import com.google.gson.Gson;
 import com.mapbox.geojson.FeatureCollection;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

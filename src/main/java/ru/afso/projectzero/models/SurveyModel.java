@@ -3,6 +3,11 @@ package ru.afso.projectzero.models;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.mapbox.geojson.FeatureCollection;
+
+import ru.afso.projectzero.converters.FeatureCollectionSerializer;
+
 
 public class SurveyModel extends BaseModel {
 
@@ -13,6 +18,9 @@ public class SurveyModel extends BaseModel {
     private String title;
 
     private String description;
+    
+    @JsonSerialize(using = FeatureCollectionSerializer.class)
+    private FeatureCollection area;
 
     private List<? extends BaseModel> questions;
 
@@ -48,6 +56,14 @@ public class SurveyModel extends BaseModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public FeatureCollection getArea() {
+        return area;
+    }
+
+    public void setArea(FeatureCollection area) {
+        this.area = area;
     }
 
     public List<? extends BaseModel> getQuestions() {

@@ -1,10 +1,12 @@
 package ru.afso.projectzero.services;
 
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.turf.TurfJoins;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +15,17 @@ import ru.afso.projectzero.dto.QuestionDTO;
 import ru.afso.projectzero.dto.SurveyDTO;
 import ru.afso.projectzero.entities.FilledSurveyEntity;
 import ru.afso.projectzero.entities.QuestionEntity;
+import ru.afso.projectzero.entities.AnswerEntity;
 import ru.afso.projectzero.entities.SurveyEntity;
 import ru.afso.projectzero.models.FilledSurveyModel;
+import ru.afso.projectzero.models.QuestionModel;
+import ru.afso.projectzero.models.AnswerModel;
 import ru.afso.projectzero.models.SurveyModel;
 import ru.afso.projectzero.repositories.FilledSurveyRepository;
 import ru.afso.projectzero.repositories.QuestionRepository;
 import ru.afso.projectzero.repositories.SurveyRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -42,11 +48,51 @@ public class SurveyService {
         this.questionRepository = questionRepository;
         this.filledSurveyRepository = filledSurveyRepository;
         this.modelMapper = modelMapper;
+        
+        Converter<List<QuestionEntity>, List<QuestionModel>> questionConverter = 
+        		ctx -> ctx.getSource() == null ? null : ctx.getSource()
+        		.stream().map(question -> modelMapper.map(question,  QuestionModel.class))
+        		.collect(Collectors.toList());
+        this.modelMapper.typeMap(SurveyEntity.class, SurveyModel.class)
+				.addMappings(mapper -> mapper.using(questionConverter)
+				.map(SurveyEntity::getQuestions, SurveyModel::setQuestions));
+        
+        Converter<List<AnswerEntity>, List<AnswerModel>> answerConverter = 
+        		ctx -> ctx.getSource() == null ? null : ctx.getSource()
+        		.stream().map(answer -> modelMapper.map(answer, AnswerModel.class))
+        		.collect(Collectors.toList());
+        this.modelMapper.typeMap(QuestionEntity.class, QuestionModel.class)
+        		.addMappings(mapper -> mapper.using(answerConverter)
+        		.map(QuestionEntity::getAnswers, QuestionModel::setAnswers));
+        
+        Converter<SurveyDTO, SurveyEntity> surveyDTOConverter = ctx -> {
+        	SurveyDTO source = ctx.getSource();
+        	final SurveyEntity destination = 
+        			ctx.getDestination() == null ? new SurveyEntity() : ctx.getDestination();
+        	destination.setBeginDate(source.getBeginDate());
+        	destination.setEndDate(source.getEndDate());
+        	destination.setTitle(source.getTitle());
+        	destination.setDescription(source.getDescription());
+        	destination.setArea(FeatureCollection.fromJson(source.getArea().toString()));
+        	if (source.getQuestions() != null) {
+        		destination.setQuestions(source.getQuestions().stream()
+	            		.map(QuestionEntity::fromDTO)
+	            		.map(question -> {
+	            			question.setSurvey(destination);
+	            			return question;
+	            			}).collect(Collectors.toList()));
+        	} else {
+        		destination.setQuestions(Collections.<QuestionEntity>emptyList());
+        	}
+        	return destination;
+        };
+        this.modelMapper.typeMap(SurveyDTO.class, SurveyEntity.class)
+        		.setConverter(surveyDTOConverter);
     }
 
     public List<SurveyModel> getSurveys(int offset, int count) {
         return StreamSupport.stream(surveyRepository.findAll().spliterator(), false)
-        		.map(SurveyEntity::toExtendedModel)
+        		.map(entity -> modelMapper.map(entity, SurveyModel.class))
                 .skip(offset).limit(count).collect(Collectors.toList());
     }
 
@@ -65,7 +111,7 @@ public class SurveyService {
                     } else {
                         return false;
                     }
-                }).map(SurveyEntity::toExtendedModel).collect(Collectors.toList());
+                }).map(entity -> modelMapper.map(entity, SurveyModel.class)).collect(Collectors.toList());
     }
 
     public SurveyModel getSurveyByIdAndLocation(long id, double latitude, double longitude) {
@@ -80,26 +126,25 @@ public class SurveyService {
                 }
             });
             if (flag) {
-                return entity.toModel();
-//            	return modelMapper.map(entity, SurveyModel.class);
+            	return modelMapper.map(entity, SurveyModel.class);
             }
         }
         throw new NoSuchElementException();
     }
 
     public SurveyModel getSurveyById(long id) {
-        return surveyRepository.findById(id).orElseThrow(NoSuchElementException::new).toModel();
+        return modelMapper.map(surveyRepository.findById(id).orElseThrow(NoSuchElementException::new), SurveyModel.class);
     }
 
     public SurveyModel createSurvey(SurveyDTO surveyDTO) {
-    	SurveyEntity survey = new SurveyEntity(surveyDTO);
-        return surveyRepository.save(survey).toModel();
+    	SurveyEntity survey = modelMapper.map(surveyDTO, SurveyEntity.class);
+        return modelMapper.map(surveyRepository.save(survey), SurveyModel.class);
     }
 
     public SurveyModel updateSurvey(long id, SurveyDTO surveyDTO) {
-    	SurveyEntity survey = new SurveyEntity(surveyDTO);
-        survey.setId(id);
-        return surveyRepository.save(survey).toModel();
+    	SurveyEntity survey = surveyRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        modelMapper.map(surveyDTO, survey);
+        return modelMapper.map(surveyRepository.save(survey), SurveyModel.class);
     }
 
     public void deleteSurveyById(long id) {
@@ -117,7 +162,7 @@ public class SurveyService {
     public SurveyModel addQuestion(long surveyId, QuestionDTO questionDTO) {
         SurveyEntity survey = surveyRepository.findById(surveyId).orElseThrow(NoSuchElementException::new);
         survey.addQuestion(new QuestionEntity(questionDTO));
-        return surveyRepository.save(survey).toModel();
+        return modelMapper.map(surveyRepository.save(survey), SurveyModel.class);
     }
 
     public void deleteQuestionById(long questionId) {
