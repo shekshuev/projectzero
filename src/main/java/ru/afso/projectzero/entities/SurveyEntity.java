@@ -1,12 +1,12 @@
 package ru.afso.projectzero.entities;
 
 import com.mapbox.geojson.FeatureCollection;
-import ru.afso.projectzero.converters.FeatureCollectionConverter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import ru.afso.projectzero.converters.FeatureCollectionConverter;
 
 @Entity
 @Table(name = "surveys")

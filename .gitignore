@@ -8,3 +8,7 @@ projectName.iml
 /build
 /local.properties
 target/
+/nbactions.xml
+/nb-configuration.xml
+/nbactions-*.xml
+/.mvn/*
